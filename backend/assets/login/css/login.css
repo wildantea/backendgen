@@ -1,0 +1,155 @@
+@import url(../../dist/css/san_pro.css?family=Source+Sans+Pro:700);
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+    color: #666;
+      font-weight: 700;
+}
+
+
+.card-container.card {
+    max-width: 400px;
+    padding: 40px 40px;
+}
+
+/*
+ * Card component
+ */
+.card {
+    background: repeating-linear-gradient(45deg, rgba(25,40,55,0.75) 35%, rgba(65,85,100,0.75) 40%, rgba(65,85,100,0.75) 42%, rgba(25,40,55,0.75) 50%, rgba(25,40,55,0.75) 55%, rgba(70,85,100,0.75) 60%, rgba(70,85,100,0.75) 75%, rgba(25,40,55,0.75) 90%);
+
+    /* just in case there no content*/
+    padding: 20px 25px 30px;
+    margin: 0 auto 25px;
+    /* shadows and rounded borders */
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    box-shadow: inset 0 0 0 1px rgba(34, 96, 140, 1), 0 3px 9px rgba(136, 101, 101, 1);
+}
+.card-container-top.card-top {
+    max-width: 400px;
+}
+.card-top {
+    background: repeating-linear-gradient(45deg, rgba(25,40,55,0.75) 35%, rgba(65,85,100,0.75) 40%, rgba(65,85,100,0.75) 42%, rgba(25,40,55,0.75) 50%, rgba(25,40,55,0.75) 55%, rgba(70,85,100,0.75) 60%, rgba(70,85,100,0.75) 75%, rgba(25,40,55,0.75) 90%);
+    font-size: 16px;
+    /* just in case there no content*/
+    margin: 0 auto;
+    margin-top: 50px;
+    text-align: center;
+        border-top-right-radius: 10px;
+    font-weight: bold;
+        line-height: 50px;
+    border-top-left-radius: 10px;
+    color: #ffffff;
+    box-shadow: inset 0 0 0 1px rgba(34, 96, 140, 1), 0 3px 9px rgba(136, 101, 101, 1);
+      background: repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.75) 35%, rgba(0, 0, 0, 0.75) 40%, rgba(0, 0, 0, 0.75) 42%, rgba(0, 0, 0, 0.75) 50%, rgba(0, 0, 0, 0.75) 55%, rgba(0, 0, 0, 0.75) 60%, rgba(0, 0, 0, 0.75) 75%, rgba(0, 0, 0, 0.75) 90%);
+    background-attachment: fixed;
+
+}
+
+.profile-img-card {
+    width: 60%;
+    margin: 0 auto 10px;
+    display: block;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+}
+
+/*
+ * Form styles
+ */
+.profile-name-card {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0 0;
+    min-height: 1em;
+}
+
+
+.form-signin #inputEmail,
+.form-signin #inputPassword {
+    direction: ltr;
+    height: 44px;
+    font-size: 16px;
+}
+
+.form-signin input[type=email],
+.form-signin input[type=password],
+.form-signin input[type=text],
+.form-signin button {
+    width: 100%;
+    display: block;
+    margin-bottom: 10px;
+    z-index: 1;
+    position: relative;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.form-signin .form-control:focus {
+    border-color: rgb(104, 145, 162);
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgb(104, 145, 162);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgb(104, 145, 162);
+}
+
+
+
+.form-control {
+    height: 40px;
+    font-family: 'Ropa Sans', sans-serif;
+    text-shadow: none;
+    font-weight: normal;
+}
+
+.form-control:focus:invalid {
+    border-color: red
+}
+
+.error-input {
+    border-color: red
+}
+
+.form-control:focus:valid {
+    border-color: green
+}
+.btn-login {
+    border: none;
+    outline: none;
+    background: #047895;
+    border-bottom: solid 4px #174156;
+    margin: 0 auto;
+    padding: 0 10px;
+    border-radius: 3px;
+    height: 46px;
+    font-size: 16px;
+    color: #FFF;
+    cursor: pointer;
+}
+.top-title {
+    display: inline-block;
+    line-height: 50px;
+    max-width: 400px;
+    text-align: center;
+    margin: 0 auto 25px;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    color: #ffffff;
+    box-shadow: inset 0 0 0 1px rgba(34, 96, 140, 1), 0 3px 9px rgba(136, 101, 101, 1);
+      background: repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.75) 35%, rgba(0, 0, 0, 0.75) 40%, rgba(0, 0, 0, 0.75) 42%, rgba(0, 0, 0, 0.75) 50%, rgba(0, 0, 0, 0.75) 55%, rgba(0, 0, 0, 0.75) 60%, rgba(0, 0, 0, 0.75) 75%, rgba(0, 0, 0, 0.75) 90%);
+    background-attachment: fixed;
+}
+.invalid {
+    color: #ffffff;
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    text-shadow: none;
+}
+.error-invalid {
+    color: #FF344D;
+    font-weight: bold;
+}

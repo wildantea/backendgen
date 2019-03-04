@@ -1,0 +1,1 @@
+- change delete action $_GET['id'] to $_POST['id'] in action.php

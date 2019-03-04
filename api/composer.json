@@ -1,0 +1,11 @@
+{
+	"autoload": {
+        "classmap": [
+        	"lib/apiClass.php"
+        ]
+    },
+    "require": {
+        "slim/slim": "~2.0",
+        "respect/validation": "^1.1"
+    }
+}
