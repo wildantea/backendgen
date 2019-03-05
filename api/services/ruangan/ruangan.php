@@ -11,7 +11,7 @@
 	});
 
 	//auth status
-	$read_auth = ($db->fetch_single_row('sys_services','nav_act','ruangan')->read_auth=="Y")?$authenticate('xml'):"noauth";
+	$read_auth = ($db->fetch_single_row('sys_services','nav_act','ruangan')->read_auth=="Y")?$authenticate('json'):"noauth";
 	//url route
 	$app->get('/ruangan',$read_auth, function() use ($app,$apiClass,$pg) {
 		$data = $pg->query("select data_ruangan.nama_ruangan,data_ruangan.kapasitas from data_ruangan");

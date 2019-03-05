@@ -108,7 +108,6 @@ $first_uri = explode("/", $resourceUri);
 $include_file = "services/".$first_uri[1].'/'.$first_uri[1].".php";
 $filename = $first_uri[1];
 
-echo $include_file;
 if (file_exists($include_file)) {
   include "$include_file";
 

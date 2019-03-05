@@ -67,7 +67,7 @@ function base_url()
   $protocol = isset($_SERVER["HTTPS"]) ? 'https://' : 'http://';
   $root = $protocol.$_SERVER['HTTP_HOST'];
   //$root .= dirname($_SERVER['SCRIPT_NAME']);
-  $root .= "/".DIR_MAIN."/";
+  $root .= DIR_MAIN."/";
   return $root;
 }
 
