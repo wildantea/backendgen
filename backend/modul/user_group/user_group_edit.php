@@ -1,6 +1,6 @@
 <?php
 include "../../inc/config.php";
-$data_edit = $db->fetch_single_row("sys_group_users","id",$_POST['id_data']);
+$data_edit = $db->fetchSingleRow("sys_group_users","id",$_POST['id_data']);
 ?>
    <div class="alert alert-danger error_data" style="display:none">
           <button type="button" class="close" data-dismiss="alert">&times;</button>

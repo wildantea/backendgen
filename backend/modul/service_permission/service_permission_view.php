@@ -66,7 +66,7 @@ foreach ($db->query("select id,username from sys_users") as $isi) {
           
 <?php if (isset($_GET['user'])) {
   
-  $token = $db->fetch_custom_single('select read_access from sys_token limit 1');
+  $token = $db->fetchCustomSingle('select read_access from sys_token limit 1');
   $read_token = json_decode($token->read_access);
           foreach ($read_token as $dt_read) {
           if ($dt_read->user_id==$_GET['user']) {

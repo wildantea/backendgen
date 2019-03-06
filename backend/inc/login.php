@@ -11,10 +11,10 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQ
         'username'=>$_POST['username'],
         'password'=>md5($_POST['password'])
         );
-    $check = $db->check_exist('sys_users', $data);
+    $check = $db->checkExist('sys_users', $data);
     if ($check==true) {
-        $dt=$db->fetch_single_row('sys_users', 'username', $_POST['username']);
-        $group_dt=$db->fetch_single_row('sys_group_users', 'level', $dt->group_level);
+        $dt=$db->fetchSingleRow('sys_users', 'username', $_POST['username']);
+        $group_dt=$db->fetchSingleRow('sys_group_users', 'level', $dt->group_level);
         $_SESSION['group_level']=$group_dt->level;
         $_SESSION['id_user']=$dt->id;
         $_SESSION['login']=1;

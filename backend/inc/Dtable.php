@@ -9,18 +9,15 @@ class DTable extends Database
 {
     private $total_filtered;
     private $record_total;
-    public $offset;
-    public $data = array();
-    public $request;
-    public $search_request;
-    public $is_numbering = 0;
-    public $primary_key;
-    public $order_by="";
-    public $order_by_custom="";
-    public $order_type="";
-    public $group_by="";
-    public $disable_search=array();
-    public $callback = array();
+    private $offset;
+    private $data = array();
+    private $request;
+    private $search_request;
+    private $is_numbering = 0;
+    private $order_by="";
+    private $group_by="";
+    private $disable_search = array();
+    private $callback = array();
     public $debug = 0;
 
     public $debug_sql="";
@@ -31,9 +28,9 @@ class DTable extends Database
     }
 
     //filter data
-    public function get_column($col)
+    public function getColumn($col)
     {
-        $col = array_diff($col, $this->disable_search);
+        $col = array_diff($col, $this->getDisableSearch());
         foreach ($col as $key) {
             $keys   = $key . " LIKE ?";
             $mark[] = $keys;
@@ -43,9 +40,9 @@ class DTable extends Database
         return $im;
     }
 
-    public function get_value($col, $value)
+    public function getValue($col, $value)
     {
-        $col = array_diff($col, $this->disable_search);
+        $col = array_diff($col, $this->getDisableSearch());
         foreach ($col as $key) {
             $val      = '%' . $value . '%';
             $result[] = $val;
@@ -55,11 +52,11 @@ class DTable extends Database
     }
 
 
-    public function result_data($sql,$prepare_data=null)
+    public function resultData($sql,$prepare_data=null)
     {
         $result = $this->query($sql,$prepare_data);
         if ($this->getErrorMessage()!="") {
-            $this->set_callback(array('error_data' => $this->getErrorMessage(),'query_detail_result' => $sql));
+            $this->setCallback(array('error_data' => $this->getErrorMessage(),'query_detail_result' => $sql));
         } else {
            return $result;
         }
@@ -77,58 +74,71 @@ class DTable extends Database
             return '';
     }
 
-    public function set_total_record($sql,$prepare_data=null)
+    /**
+     * exclude column searching datatable
+     * @param array $data array column 
+     */
+    public function setDisableSearchColumn($data) {
+        $this->disable_search = array($data);
+    }
+    public function getDisableSearch() {
+       return $this->disable_search;
+    }
+
+
+
+    public function setTotalRecord($sql,$prepare_data=null)
     {
 
-        if ($this->group_by!="") {
+        if ($this->getGroupBy()!="") {
             $sql_for_counting = $this->getBetween($sql,'from','group by');
-            $jml_datas = $this->fetch_custom_single("select count(DISTINCT ".$this->group_by.") as jml ".$sql_for_counting,$prepare_data);
-            $jml_data = $jml_datas->jml;
+            $count_data = $this->fetchCustomSingle("select count(DISTINCT ".$this->getGroupBy().") as jml ".$sql_for_counting,$prepare_data);
+            $data_count = $count_data->jml;
         } else {
             $sql_for_counting = stristr($sql, 'from');
             //$sql_for_counting = str_replace("having", "where", $sql_for_counting);
       
-            $jml_datas = $this->fetch_custom_single("select count(*) as jml ".$sql_for_counting,$prepare_data);
-            $jml_data = $jml_datas->jml;
+            $count_data = $this->fetchCustomSingle("select count(*) as jml ".$sql_for_counting,$prepare_data);
+            $data_count = $count_data->jml;
         }
 
         if ($this->getErrorMessage()!="") {
-            $this->set_callback(array('error_data' => $this->getErrorMessage(),'query_detail_total' => "select count(*) as jml ".$sql_for_counting));
+            $this->setCallback(array('error_data' => $this->getErrorMessage(),'query_detail_total' => "select count(*) as jml ".$sql_for_counting));
         } else {
             //total filtered default
-            $this->record_total = $jml_data;
+            $this->record_total = $data_count;
         }
 
 
     }
 
 
-    public function set_total_filtered($sql,$prepare_data=null)
+    public function setTotalFiltered($sql,$prepare_data=null)
     {
-        if ($this->group_by!="") {
+        if ($this->getGroupBy()!="") {
             $sql_for_counting = $this->getBetween($sql,'from','group by');
-            $jml_datas = $this->fetch_custom_single("select count(DISTINCT ".$this->group_by.") as jml ".$sql_for_counting,$prepare_data);
-            $jml_data = $jml_datas->jml;
+            $count_data = $this->fetchCustomSingle("select count(DISTINCT ".$this->getGroupBy().") as jml ".$sql_for_counting,$prepare_data);
+            $data_count = $count_data->jml;
         } else {
             $sql_for_counting = stristr($sql, 'from');
             //$sql_for_counting = str_replace("having", "where", $sql_for_counting);
       
-            $jml_datas = $this->fetch_custom_single("select count(*) as jml ".$sql_for_counting,$prepare_data);
-            $jml_data = $jml_datas->jml;
+            $count_data = $this->fetchCustomSingle("select count(*) as jml ".$sql_for_counting,$prepare_data);
+            $data_count = $count_data->jml;
         }
 
         if ($this->getErrorMessage()!="") {
-            $this->set_callback(array('error_data' => $this->getErrorMessage(),'query_detail_filter' => "select count(*) as jml ".$sql_for_counting));
+            $this->setCallback(array('error_data' => $this->getErrorMessage(),'query_detail_filter' => "select count(*) as jml ".$sql_for_counting));
         } else {
             //total filtered default
-            $this->total_filtered = $jml_data;
+            $this->total_filtered = $data_count;
         }
 
 
     }
 
 
-    public function join_value($search_value,$where_data=array())
+    public function joinValue($search_value,$where_data=array())
     {
 
         if ($where_data!=null) {
@@ -149,7 +159,7 @@ class DTable extends Database
 
     }
 
-    public function set_numbering_status($status) {
+    public function setNumberingStatus($status) {
          $this->is_numbering = $status;
     }
 
@@ -158,42 +168,34 @@ class DTable extends Database
         return $this->is_numbering;
     }
 
-    public function set_order_by_custom($val)
-    {
-        $this->order_by_custom = $val;
-    }
-    public function set_order_by($val)
+    public function setOrderBy($val)
     {
         $this->order_by = $val;
     }
-    public function get_order_by_custom()
-    {
-        return $this->order_by_custom;
-    }
 
-    public function get_order_by()
+    public function getOrderBy()
     {
         return $this->order_by;
     }
 
-
-
-    public function set_order_type($val)
+    public function setGroupBy($val)
     {
-        $this->order_type = $val;
+        $this->group_by = $val;
+    }
+
+    public function getGroupBy()
+    {
+        return $this->group_by;
     }
 
 
     //custom query datatable
-    public function get_custom($sql, $columns,$prepare_data=array())
+    public function execQuery($sql, $columns,$prepare_data=array())
     {
 
         if ($prepare_data!==null) {
         $prepare_data=array_values($prepare_data);
         }
-
-
-
 
         //all data request
         $requestData   = $_REQUEST;
@@ -208,15 +210,7 @@ class DTable extends Database
 
 
              if ($requestData['draw']==1) {
-
-                if (isset($this->order_by_custom)) {
-                    $do_order = $this->order_by_custom;
-                    $do_order_type = ""; 
-                } else {
-                     $do_order = "ORDER BY ".$this->order_by;
-                     $do_order_type = $this->order_type;          
-                }
-
+                $do_order = "ORDER BY ".$this->getOrderBy();
 
              } /*elseif ($requestData['start']>0) {
 
@@ -228,16 +222,18 @@ class DTable extends Database
              }*/
               else {
                 if ($this->is_numbering==true && $requestData['order'][0]['column']!=0) {
-                    $do_order = "ORDER BY ".$columns[$requestData['order'][0]['column']-1];
+                    $do_order_by = "ORDER BY ".$columns[$requestData['order'][0]['column']-1];
                     $do_order_type = $requestData['order'][0]['dir'];
                 } else {
-                    $do_order = "ORDER BY ".$columns[$requestData['order'][0]['column']];
+                    $do_order_by = "ORDER BY ".$columns[$requestData['order'][0]['column']];
                     $do_order_type = $requestData['order'][0]['dir'];
                 }
 
+                $do_order = $do_order_by.' '.$do_order_type;
+
              }
 
-            // $this->set_callback(array('do_order' =>$do_order,'order_type' => $do_order_type));
+            // $this->setCallback(array('do_order' =>$do_order,'order_type' => $do_order_type));
 //echo $do_order;
         if (!empty($requestData['search']['value'])) {
 
@@ -255,25 +251,25 @@ class DTable extends Database
             }
 
               //get search value
-            $search_value = $this->get_value($columns, $this->search_request);
+            $search_value = $this->getValue($columns, $this->search_request);
 
             //join search with where data and extract where data value
-            $join = $this->join_value($search_value,$prepare_data);
+            $join = $this->joinValue($search_value,$prepare_data);
 
 
             $sql = $sql;
-            $sql .= " $condition (" . $this->get_column($columns).")";
+            $sql .= " $condition (" . $this->getColumn($columns).")";
 
        /*     echo $sql;
             print_r($join);*/
             if ($this->group_by!="") {
-                $sql .= " group by ".$this->group_by." ".$do_order." ".$do_order_type;
+                $sql .= " group by ".$this->getGroupBy()." ".$do_order;
             } else {
-                $sql .= " ".$do_order." ".$do_order_type;
+                $sql .= " ".$do_order;
             }
             
             //set total filtered
-            $this->set_total_filtered($sql,$join);
+            $this->setTotalFiltered($sql,$join);
             
             if($requestData['length']<0) {
                 $length = "";
@@ -282,25 +278,25 @@ class DTable extends Database
             }
             $sql .= ' '.$length;
 
-            $result = $this->result_data($sql,$join);
+            $result = $this->resultData($sql,$join);
+
+            if ($this->debug==1) {
+                $this->setCallback(array('detail_sql_total' => $sql));
+            }
 
 
         } else {
 
             if ($this->group_by!="") {
-                $sql .= " group by ".$this->group_by." ".$do_order." ".$do_order_type;
+                $sql .= " group by ".$this->getGroupBy()." ".$do_order;
             } else {
-                $sql .= " ".$do_order." ".$do_order_type;
-            }
-        
-            if ($this->debug==1) {
-                $this->set_callback(array('detail_sql_total' => $sql));
+                $sql .= " ".$do_order;
             }
 
 
-            $this->set_total_record($sql,$prepare_data);
+            $this->setTotalRecord($sql,$prepare_data);
 
-            $this->set_total_filtered($sql,$prepare_data);
+            $this->setTotalFiltered($sql,$prepare_data);
 
          /*   if ($orderBy!=$this->order_by && $orderByType!=$this->order_type) {
 
@@ -320,7 +316,11 @@ class DTable extends Database
 
 
 
-            $result = $this->result_data($sql,$prepare_data);
+            $result = $this->resultData($sql,$prepare_data);
+
+            if ($this->debug==1) {
+                $this->setCallback(array('detail_sql_total' => $sql));
+            }
 
         }
 
@@ -329,23 +329,10 @@ class DTable extends Database
         return $result;
     }
 
-
-    public function get_offset()
-    {
-        return $this->offset;
-    }
-
-    public function set_sql_debug($debug) {
-        $this->debug_sql = $debug;
-    }
-    public function get_sql_debug() {
-        return $this->debug_sql;
-    }
-
-    public function set_callback($callback) {
+    public function setCallback($callback) {
         $this->callback = $callback;
     }
-    public function get_callback() {
+    public function getCallback() {
         return $this->callback;
     }
 
@@ -353,8 +340,12 @@ class DTable extends Database
         $this->debug = $debug;
     }
 
-
-    public function create_data()
+    public function setData($data)
+    {
+        $this->data = $data;
+    }
+    
+    public function createData()
     {
         $data      = $this->data;
         $json_data = array(
@@ -363,16 +354,11 @@ class DTable extends Database
             "recordsFiltered" => intval($this->total_filtered),
             "data" => $data // total data array
         );
-        if (!empty($this->get_callback())) {
-            $json_data = array_merge($this->get_callback(),$json_data); 
+        if (!empty($this->getCallback())) {
+            $json_data = array_merge($this->getCallback(),$json_data); 
         }
         echo json_encode($json_data);
         // send data as json format
-    }
-
-    public function set_data($data)
-    {
-        $this->data = $data;
     }
 
 }

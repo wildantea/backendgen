@@ -11,7 +11,7 @@
 	});
 
 	//auth status
-	$read_auth = ($db->fetch_single_row('sys_services','nav_act','ruangan')->read_auth=="Y")?$authenticate('json'):"noauth";
+	$read_auth = ($db->fetchSingleRow('sys_services','nav_act','ruangan')->read_auth=="Y")?$authenticate('json'):"noauth";
 	//url route
 	$app->get('/ruangan',$read_auth, function() use ($app,$apiClass,$pg) {
 		$data = $pg->query("select data_ruangan.nama_ruangan,data_ruangan.kapasitas from data_ruangan");
@@ -87,7 +87,7 @@
 	});
 
 	//auth status
-	$create_auth = ($db->fetch_single_row('sys_services','nav_act','ruangan')->create_auth=="Y")?$authenticate('xml'):"noauth";
+	$create_auth = ($db->fetchSingleRow('sys_services','nav_act','ruangan')->create_auth=="Y")?$authenticate('xml'):"noauth";
 	//post ruangan
 	$app->post('/ruangan',$create_auth, function() use ($app,$db,$apiClass) {
 	 		$app = \Slim\Slim::getInstance();
@@ -143,7 +143,7 @@
 	});
 
 	//auth status
-	$update_auth = ($db->fetch_single_row('sys_services','nav_act','ruangan')->update_auth=="Y")?$authenticate('xml'):"noauth";
+	$update_auth = ($db->fetchSingleRow('sys_services','nav_act','ruangan')->update_auth=="Y")?$authenticate('xml'):"noauth";
 
 	//update ruangan
 	$app->put('/ruangan/:id',$update_auth, function($id) use ($app,$db,$apiClass) {
@@ -237,11 +237,11 @@
 
 
 //auth status
-$delete_auth = ($db->fetch_single_row('sys_services','nav_act','ruangan')->delete_auth=="Y")?$authenticate('xml'):"noauth";
+$delete_auth = ($db->fetchSingleRow('sys_services','nav_act','ruangan')->delete_auth=="Y")?$authenticate('xml'):"noauth";
 
 	//delete ruangan
 	$app->delete('/ruangan/delete/:id',$delete_auth, function($id) use ($app,$db,$apiClass) {
-			$single_data = $db->fetch_single_row("data_ruangan","id",$id);
+			$single_data = $db->fetchSingleRow("data_ruangan","id",$id);
 			
 	 		$up = $db->delete('data_ruangan','id',$id);
 

@@ -201,17 +201,17 @@
               <!-- User Account: style can be found in dropdown.less -->
               <li class="dropdown user user-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <img src="<?=base_url();?>upload/back_profil_foto/<?=$db->fetch_single_row('sys_users','id',$_SESSION['id_user'])->foto_user?>" class="user-image" alt="User Image"/>
-                  <span class="hidden-xs"><?=ucwords($db->fetch_single_row('sys_users','id',$_SESSION['id_user'])->full_name)?></span>
+                  <img src="<?=base_url();?>upload/back_profil_foto/<?=$db->fetchSingleRow('sys_users','id',$_SESSION['id_user'])->foto_user?>" class="user-image" alt="User Image"/>
+                  <span class="hidden-xs"><?=ucwords($db->fetchSingleRow('sys_users','id',$_SESSION['id_user'])->full_name)?></span>
                 </a>
 
                 <ul class="dropdown-menu">
                   <!-- User image -->
                   <li class="user-header">
-                    <img src="<?=base_url();?>upload/back_profil_foto/<?=$db->fetch_single_row('sys_users','id',$_SESSION['id_user'])->foto_user?>" class="img-circle" alt="User Image" />
+                    <img src="<?=base_url();?>upload/back_profil_foto/<?=$db->fetchSingleRow('sys_users','id',$_SESSION['id_user'])->foto_user?>" class="img-circle" alt="User Image" />
                     <p>
-              <?=ucwords($db->fetch_single_row('sys_users','id',$_SESSION['id_user'])->full_name)?> - <?=$db->fetch_single_row('sys_group_users','level',$_SESSION['group_level'])->deskripsi?>
-            <small>Member since <?=$db->fetch_custom_single("SELECT MONTHNAME(STR_TO_DATE(month(date_created), '%m')) as bulan from sys_users where id=? ",array('id'=>$_SESSION['id_user']))->bulan;?> <?=$db->fetch_custom_single("select year(date_created) as tahun from sys_users where id=?",array('id'=>$_SESSION['id_user']))->tahun;?> </small>
+              <?=ucwords($db->fetchSingleRow('sys_users','id',$_SESSION['id_user'])->full_name)?> - <?=$db->fetchSingleRow('sys_group_users','level',$_SESSION['group_level'])->deskripsi?>
+            <small>Member since <?=$db->fetchCustomSingle("SELECT MONTHNAME(STR_TO_DATE(month(date_created), '%m')) as bulan from sys_users where id=? ",array('id'=>$_SESSION['id_user']))->bulan;?> <?=$db->fetchCustomSingle("select year(date_created) as tahun from sys_users where id=?",array('id'=>$_SESSION['id_user']))->tahun;?> </small>
                                     </p>
                   </li>
                   <!-- Menu Body -->

@@ -328,11 +328,11 @@ include "template.php";
 //include "write_excel.php";
 
 //write form add
-//$db->buat_file('result/'.$service_name.'/'.$service_name.'.php',$import_page);
+//$db->createFile('result/'.$service_name.'/'.$service_name.'.php',$import_page);
 
-/*$db->buat_file('result/import.php',$import_page);
-$db->buat_file('result/filter.php',$filter_page);
-$db->buat_file('result/download_data.php',$download_data);
+/*$db->createFile('result/import.php',$import_page);
+$db->createFile('result/filter.php',$filter_page);
+$db->createFile('result/download_data.php',$download_data);
 
 
 exit();*/
@@ -348,7 +348,7 @@ $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 
 $objWriter->save( 'result/'.$service_name.'.xlsx');
 
-    $dir_to_download = $db->get_dir_excel(getcwd());
+    $dir_to_download = $db->getDirExcel(getcwd());
     $file_create = array($import_page => 'import.php',$filter_page => 'filter.php',$download_data => 'download_data.php');
-   $db->downloadfolder_excel($dir_to_download,$file_create,$service_name);
+   $db->downloadfolderExcel($dir_to_download,$file_create,$service_name);
    //$db->downloadfolder($dir_to_download,$import_page,'tes');

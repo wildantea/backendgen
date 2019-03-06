@@ -78,7 +78,7 @@ switch ($_GET['act']) {
 
 		//check group exist
 				foreach ($data as $dt) {
-			$check = $db->check_exist("sys_group_users",array("level" => $dt["level"]));
+			$check = $db->checkExist("sys_group_users",array("level" => $dt["level"]));
 			if ($check==false) {
 				$data = array(
 					"level" => $dt["level"],
@@ -93,7 +93,7 @@ switch ($_GET['act']) {
 		$data = $db->query("select * from sys_menu where nav_act=?",array('nav_act'=>$_GET['page']));
 
 		foreach ($data as $dt) {
-			$menu_query = $db->convert_obj_to_array($dt);
+			$menu_query = $db->converObjToArray($dt);
 		}
 
 		unset($menu_query['id']);
@@ -114,9 +114,9 @@ switch ($_GET['act']) {
 		';
 
 		if ($dt->parent_name!="") {
-			$get_parent = $db->fetch_single_row('sys_menu','parent_name',$dt->parent_name);
+			$get_parent = $db->fetchSingleRow('sys_menu','parent_name',$dt->parent_name);
 				$string.= '
-				$get_parent_id = $db->fetch_single_row("sys_menu","page_name","'.$get_parent->parent_name.'")->id;
+				$get_parent_id = $db->fetchSingleRow("sys_menu","page_name","'.$get_parent->parent_name.'")->id;
 				$db->update("sys_menu",array("parent" => $get_parent_id),"id",$last_id);
 				';
 
@@ -150,13 +150,13 @@ switch ($_GET['act']) {
 
 		?>';
 
-		$dir_to_download = $db->get_dir(getcwd()).$_GET['page'].DIRECTORY_SEPARATOR;
+		$dir_to_download = $db->getDir(getcwd()).$_GET['page'].DIRECTORY_SEPARATOR;
 		$db->downloadfolder($dir_to_download,$string,$_GET['page']);
 		break;
 	case 'delete':
-	$check_type = $db->fetch_single_row('sys_services','id',$_POST['id']);
-		if (file_exists(SITE_ROOT."/api/services/".$db->fetch_single_row('sys_services','id',$_POST['id'])->nav_act)) {
-			$db->deleteDirectory(SITE_ROOT."/api/services/".$db->fetch_single_row('sys_services','id',$_POST['id'])->nav_act);
+	$check_type = $db->fetchSingleRow('sys_services','id',$_POST['id']);
+		if (file_exists(SITE_ROOT."/api/services/".$db->fetchSingleRow('sys_services','id',$_POST['id'])->nav_act)) {
+			$db->deleteDirectory(SITE_ROOT."/api/services/".$db->fetchSingleRow('sys_services','id',$_POST['id'])->nav_act);
 		}
 		$db->delete('sys_services','id',$_POST['id']);
 
@@ -164,7 +164,7 @@ switch ($_GET['act']) {
 	case 'up':
 
 	if ($_POST['parent']!=0) {
-		$parent_name = $db->fetch_single_row('sys_menu','id',$_POST['parent'])->page_name;
+		$parent_name = $db->fetchSingleRow('sys_menu','id',$_POST['parent'])->page_name;
 	} else {
 		$parent_name = "";
 	}

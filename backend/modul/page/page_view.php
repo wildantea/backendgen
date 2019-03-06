@@ -82,6 +82,16 @@
                                       </thead>
                                         <tbody>
                                          <?php
+$page_cant_be_deleted = array(
+'page',
+'sistem',
+'user_group',
+'user_managements',
+'menu_management',
+'excel',
+'service',
+'service_permission'
+);
       $dtb=$db->query("select * from sys_menu order by urutan_menu,type_menu asc");
 
       foreach ($dtb as $isi) {
@@ -92,7 +102,7 @@
 if ($isi->parent==0) {
   echo "none";
 } else {
-  echo $db->fetch_single_row('sys_menu','id',$isi->parent)->page_name;
+  echo $db->fetchSingleRow('sys_menu','id',$isi->parent)->page_name;
 }
   ?>
 </td>
@@ -110,9 +120,14 @@ if ($isi->tampil=='Y') {
         <td>
 
        <a href="<?=base_index();?>page/edit/<?=$isi->id;?>" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i></a>
-      <button class="btn btn-danger btn-sm hapus btn-sm" data-uri="<?=base_admin();?>system/page/page_action.php" data-id="<?=$isi->id;?>"><i class="fa fa-trash-o"></i></button>
+<?php
+if (!in_array($isi->nav_act, $page_cant_be_deleted)) {
+  ?>
+    <button class="btn btn-danger btn-sm hapus btn-sm" data-uri="<?=base_admin();?>modul/page/page_action.php" data-id="<?=$isi->id;?>"><i class="fa fa-trash-o"></i></button>
   <?php
-if ($isi->type_menu!='main') {
+}
+
+if ($isi->type_menu=='page') {
   ?>
     <a href="<?=base_admin();?>modul/page/page_action.php?act=back&page=<?=$isi->nav_act;?>" class="btn btn-success btn-sm"><i class="fa fa-download"></i></a>
     <?php
@@ -206,7 +221,7 @@ $menu = array(
 // Builds the array lists with data from the menu table
 foreach ($db->query("select * from sys_menu order by parent,urutan_menu asc ") as $items) {
 
-  $items = $db->convert_obj_to_array($items);
+  $items = $db->converObjToArray($items);
 
       // Creates entry into items array with current menu item id ie.
     $menu['items'][$items['id']] = $items;

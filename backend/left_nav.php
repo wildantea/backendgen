@@ -5,10 +5,10 @@
           <!-- Sidebar user panel -->
           <div class="user-panel">
             <div class="pull-left image">
-              <img src="<?=base_url();?>upload/back_profil_foto/<?=$db->fetch_single_row('sys_users','id',$_SESSION['id_user'])->foto_user?>" class="img-circle" alt="User Image" />
+              <img src="<?=base_url();?>upload/back_profil_foto/<?=$db->fetchSingleRow('sys_users','id',$_SESSION['id_user'])->foto_user?>" class="img-circle" alt="User Image" />
             </div>
             <div class="pull-left info">
-              <p><?=ucwords($db->fetch_single_row('sys_users','id',$_SESSION['id_user'])->username)?></p>
+              <p><?=ucwords($db->fetchSingleRow('sys_users','id',$_SESSION['id_user'])->username)?></p>
 
               <a href="<?=base_index();?>profil"><i class="fa fa-circle text-success"></i> Online</a>
             </div>
@@ -53,7 +53,7 @@ $menu = array(
 // Builds the array lists with data from the menu table
 foreach ($result as $items) {
 
-  $items = $db->convert_obj_to_array($items);
+  $items = $db->converObjToArray($items);
 
       // Creates entry into items array with current menu item id ie.
     $menu['items'][$items['id']] = $items;

@@ -8,7 +8,7 @@ switch (uri_segment(1)) {
 		include "page_add.php";
 		break;
 	case 'edit':
-		$data_edit = $db->fetch_single_row('sys_menu','id',uri_segment(2));
+		$data_edit = $db->fetchSingleRow('sys_menu','id',uri_segment(2));
 		include "page_edit.php";
 		break;
 	case 'icon':

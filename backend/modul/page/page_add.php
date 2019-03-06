@@ -66,7 +66,7 @@
                         <div class="col-lg-10">
                           <select data-placeholder="Pilih Modul" name="parent" class="form-control chzn-select" tabindex="2">
                             <option value="0">None</option>
-                            <?php foreach ($db->query('select * from sys_menu where url="" or url is null') as $isi) {
+                            <?php foreach ($db->query('select * from sys_menu where type_menu="main"') as $isi) {
                               echo "<option value='$isi->id'>$isi->page_name</option>";
                             }
                             ?>

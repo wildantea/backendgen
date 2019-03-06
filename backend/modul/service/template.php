@@ -12,7 +12,7 @@ $service_template = '<?php
 	});
 
 	//auth status
-	$read_auth = ($db->fetch_single_row(\'sys_services\',\'nav_act\',\''.$service_name.'\')->read_auth=="Y")?$authenticate(\'xml\'):"noauth";
+	$read_auth = ($db->fetchSingleRow(\'sys_services\',\'nav_act\',\''.$service_name.'\')->read_auth=="Y")?$authenticate(\'xml\'):"noauth";
 	//url route
 	$app->get(\'/'.$service_name.'\',$read_auth, function() use ($app,$apiClass,$pg) {
 		$data = $pg->query("'.$select_query.'");
@@ -80,7 +80,7 @@ $service_template = '<?php
 	});
 
 	//auth status
-	$create_auth = ($db->fetch_single_row(\'sys_services\',\'nav_act\',\''.$service_name.'\')->create_auth=="Y")?$authenticate(\'xml\'):"noauth";
+	$create_auth = ($db->fetchSingleRow(\'sys_services\',\'nav_act\',\''.$service_name.'\')->create_auth=="Y")?$authenticate(\'xml\'):"noauth";
 	//post '.$service_name.'
 	$app->post(\'/'.$service_name.'\',$create_auth, function() use ($app,$db,$apiClass) {
 	 		$app = \Slim\Slim::getInstance();
@@ -118,7 +118,7 @@ $service_template = '<?php
 	});
 
 	//auth status
-	$update_auth = ($db->fetch_single_row(\'sys_services\',\'nav_act\',\''.$service_name.'\')->update_auth=="Y")?$authenticate(\'xml\'):"noauth";
+	$update_auth = ($db->fetchSingleRow(\'sys_services\',\'nav_act\',\''.$service_name.'\')->update_auth=="Y")?$authenticate(\'xml\'):"noauth";
 
 	//update '.$service_name.'
 	$app->put(\'/'.$service_name.'/:id\',$update_auth, function($id) use ($app,$db,$apiClass) {
@@ -184,11 +184,11 @@ $service_template = '<?php
 
 
 //auth status
-$delete_auth = ($db->fetch_single_row(\'sys_services\',\'nav_act\',\''.$service_name.'\')->delete_auth=="Y")?$authenticate(\'xml\'):"noauth";
+$delete_auth = ($db->fetchSingleRow(\'sys_services\',\'nav_act\',\''.$service_name.'\')->delete_auth=="Y")?$authenticate(\'xml\'):"noauth";
 
 	//delete '.$service_name.'
 	$app->delete(\'/'.$service_name.'/delete/:id\',$delete_auth, function($id) use ($app,$db,$apiClass) {
-			$single_data = $db->fetch_single_row("'.$main_table.'","'.$primary_key.'",$id);
+			$single_data = $db->fetchSingleRow("'.$main_table.'","'.$primary_key.'",$id);
 			'.$delete_file_images.'
 	 		$up = $db->delete(\''.$main_table.'\',\''.$primary_key.'\',$id);
 

@@ -8,21 +8,18 @@ $columns = array(
   );
 
   //if you want to exclude column for searching, put columns name in array
-  //$new_table->disable_search = array('deskripsi','sys_group_users.id');
+  //$datatable->setDisableSearchColumn('deskripsi','sys_group_users.id');
   
   //set numbering is true
-  $datatable->set_numbering_status(1);
+  $datatable->setNumberingStatus(1);
 
   //set order by column
-  $datatable->set_order_by("sys_group_users.id");
-
-  //set order by type
-  $datatable->set_order_type("desc");
+  $datatable->setOrderBy("sys_group_users.id desc");
 
   //set group by column
-  //$new_table->group_by = "group by sys_group_users.id";
+  //$datatable->setGroupBy("group by sys_group_users.id)";
 
-  $query = $datatable->get_custom("select sys_group_users.level_name,sys_group_users.deskripsi,sys_group_users.id from sys_group_users",$columns);
+  $query = $datatable->execQuery("select sys_group_users.level_name,sys_group_users.deskripsi,sys_group_users.id from sys_group_users",$columns);
 
   //buat inisialisasi array data
   $data = array();
@@ -48,8 +45,8 @@ $columns = array(
   }
 
 //set data
-$datatable->set_data($data);
+$datatable->setData($data);
 //create our json
-$datatable->create_data();
+$datatable->createData();
 
 ?>

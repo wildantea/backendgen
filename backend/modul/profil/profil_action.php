@@ -35,8 +35,8 @@ if ($size[0]>512) {
 } else {
   copy($_FILES["foto_user"]["tmp_name"], "../../../../upload/back_profil_foto/".$filename_thumb);
 }
-$db->deleteDirectory("../../../../upload/back_profil_foto/".$db->fetch_single_row("sys_users","id",$_POST["id"])->foto_user);
-$db->deleteDirectory("../../../../upload/back_profil_foto/thumb_".$db->fetch_single_row("sys_users","id",$_POST["id"])->foto_user);
+$db->deleteDirectory("../../../../upload/back_profil_foto/".$db->fetchSingleRow("sys_users","id",$_POST["id"])->foto_user);
+$db->deleteDirectory("../../../../upload/back_profil_foto/thumb_".$db->fetchSingleRow("sys_users","id",$_POST["id"])->foto_user);
               $foto_user = array("foto_user"=>$filename);
               $data = array_merge($data,$foto_user);
 						}

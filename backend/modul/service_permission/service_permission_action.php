@@ -6,7 +6,7 @@ switch ($_GET["act"]) {
 	
 	case 'change_read':
 		print_r($_POST);
-		$get_read = $db->fetch_custom_single("select read_access from sys_token where id=?",array('id' => $_POST['token_id']));
+		$get_read = $db->fetchCustomSingle("select read_access from sys_token where id=?",array('id' => $_POST['token_id']));
 
         $read = json_decode($get_read->read_access);
         foreach ($read as $dt_read) {
@@ -36,7 +36,7 @@ switch ($_GET["act"]) {
 		break;
 	case 'change_read_token':
 		print_r($_POST);
-		$get_read = $db->fetch_custom_single("select read_access from sys_token where id=?",array('id' => $_POST['token_id']));
+		$get_read = $db->fetchCustomSingle("select read_access from sys_token where id=?",array('id' => $_POST['token_id']));
 		$get_read = json_decode($get_read->read_access);
 		$read_access =  $get_read->{'access'};
 		$token_enable = $_POST['data_act'];
@@ -45,7 +45,7 @@ switch ($_GET["act"]) {
 		$update = $db->update('sys_token',$data,'id',$_POST['token_id']);
 		break;
 	case 'change_create':
-		$get_create = $db->fetch_custom_single("select create_access from sys_token where id=?",array('id' => $_POST['token_id']));
+		$get_create = $db->fetchCustomSingle("select create_access from sys_token where id=?",array('id' => $_POST['token_id']));
 		$get_created = json_decode($get_create->create_access);
 
 		foreach ($get_created as $dt_read) {
@@ -76,7 +76,7 @@ switch ($_GET["act"]) {
 		break;
 	case 'change_create_token':
 		print_r($_POST);
-		$get_create = $db->fetch_custom_single("select create_access from sys_token where id=?",array('id' => $_POST['token_id']));
+		$get_create = $db->fetchCustomSingle("select create_access from sys_token where id=?",array('id' => $_POST['token_id']));
 		$get_create = json_decode($get_create->create_access);
 		$create_access =  $get_create->{'access'};
 		$token_enable = $_POST['data_act'];
@@ -86,7 +86,7 @@ switch ($_GET["act"]) {
 		break;
 	case 'change_update':
 		print_r($_POST);
-		$get_update = $db->fetch_custom_single("select update_access from sys_token where id=?",array('id' => $_POST['token_id']));
+		$get_update = $db->fetchCustomSingle("select update_access from sys_token where id=?",array('id' => $_POST['token_id']));
 		$get_update = json_decode($get_update->update_access);
 
 		foreach ($get_update as $dt_read) {
@@ -116,7 +116,7 @@ switch ($_GET["act"]) {
 		break;
 	case 'change_update_token':
 		print_r($_POST);
-		$get_update = $db->fetch_custom_single("select update_access from sys_token where id=?",array('id' => $_POST['token_id']));
+		$get_update = $db->fetchCustomSingle("select update_access from sys_token where id=?",array('id' => $_POST['token_id']));
 		$get_update_token = json_decode($get_update->update_access);
 		$update_access_token = $get_update_token->{'access'};
 		$token_enable = $_POST['data_act'];
@@ -126,7 +126,7 @@ switch ($_GET["act"]) {
 		break;
 	case 'change_delete':
 		print_r($_POST);
-		$get_delete = $db->fetch_custom_single("select delete_access from sys_token where id=?",array('id' => $_POST['token_id']));
+		$get_delete = $db->fetchCustomSingle("select delete_access from sys_token where id=?",array('id' => $_POST['token_id']));
 		$get_delete = json_decode($get_delete->delete_access);
 		foreach ($get_delete as $dt_read) {
           if ($dt_read->user_id==$_POST['user']) {
@@ -155,7 +155,7 @@ switch ($_GET["act"]) {
 		break;
 	case 'change_delete_token':
 		print_r($_POST);
-		$get_delete = $db->fetch_custom_single("select delete_access from sys_token where id=?",array('id' => $_POST['token_id']));
+		$get_delete = $db->fetchCustomSingle("select delete_access from sys_token where id=?",array('id' => $_POST['token_id']));
 		$get_delete = json_decode($get_delete->delete_access);
 		$delete_access_token = $get_delete->{'access'};
 		$token_enable = $_POST['data_act'];

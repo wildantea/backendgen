@@ -1,4 +1,4 @@
-<?php $data_edit=$db->fetch_single_row('sys_users','id',$_SESSION['id_user']);
+<?php $data_edit=$db->fetchSingleRow('sys_users','id',$_SESSION['id_user']);
 
 ?>
  

@@ -85,7 +85,7 @@
                         <div class="col-lg-10">
             <select  id="group_level" name="group_level" data-placeholder="Pilih Group user ..." class="form-control chzn-select" tabindex="2" required>
                <option value=""></option>
-               <?php foreach ($db->fetch_all("sys_group_users") as $isi) {
+               <?php foreach ($db->fetchAll("sys_group_users") as $isi) {
                   echo "<option value='$isi->level'>$isi->level_name</option>";
                } ?>
               </select>

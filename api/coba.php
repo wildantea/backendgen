@@ -112,7 +112,7 @@ function form()
 	print_r($end);
 /*
 	global $db;
-	$data = $db->fetch_all('ext');
+	$data = $db->fetchAll('ext');
 	foreach ($data as $dt) {
 		echo "'".$dt->extentionn."' => '".$dt->mime."',<br>";
 	}*/

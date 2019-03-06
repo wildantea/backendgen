@@ -1,4 +1,4 @@
-<?php
+<?php 
 $gallery_detail = $gallery_detail_top.'<!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
@@ -92,15 +92,11 @@ $list_gallery = '<!-- Content Header (Page header) -->
                       <div class="album-top">
                           <div class="col-md-2 ">
                           <?php
-                           foreach ($db->fetch_all("sys_menu") as $isi) {
-                                if (uri_segment(1)==$isi->url) {
-                                    if ($role_act["insert_act"]=="Y") {
+                            if ($db->userCan(uri_segment(0),"insert_act")) {
                                 ?>
-                              <a href="<?=base_index();?>'.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/tambah" class="btn btn-primary "><i class="fa fa-plus"></i> Add Album</a>
-                              <?php
-                                }
-                              }
-                            }
+                            <a href="<?=base_index();?>'.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/tambah" class="btn btn-primary "><i class="fa fa-plus"></i> Add Album</a>
+                                <?php
+                            } 
                           ?>
                           </div>
                           <div class="col-md-10">
@@ -166,23 +162,17 @@ $list_table ='<!-- Content Header (Page header) -->
                             <div class="box">
                                 <div class="box-header">
                                 <?php
-                                  foreach ($db->fetch_all("sys_menu") as $isi) {
-                                      if (uri_segment(1)==$isi->url) {
-                                          if ($role_act["insert_act"]=="Y") {
+                                if ($db->userCan(uri_segment(0),"insert_act")) {
                                       ?>
                                       <a '.$button_modal.' class="btn btn-primary "><i class="fa fa-plus"></i> <?php echo $lang["add_button"];?></a>
                                       <?php
-                                          }
-                                      }
                                   }
                                 ?>
                             </div><!-- /.box-header -->
                             <div class="box-body">
                                 <div class="row">
-                                    <div class="col-sm-12" style="text-align: right;margin-bottom: 10px">
-                                    <button id="select_all" class="btn btn-primary btn-xs"><i class="fa fa-check-square-o"></i> <?php echo $lang["select_all"];?></button>
-                                    <button id="deselect_all" class="btn btn-primary btn-xs"><i class="fa fa-remove"></i> <?php echo $lang["deselect_all"];?></button>
-                                    <button id="bulk_delete" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> <?php echo $lang["delete_selected"];?></button> <span class="selected-data"></span>
+                                    <div class="col-sm-12" style="margin-bottom: 10px">
+                                   <button id="bulk_delete" style="display: none;" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> <?php echo $lang["delete_selected"];?></button> <span class="selected-data"></span>
                             </div>
                             </div>
  <div class="alert alert-warning fade in error_data_delete" style="display:none">
@@ -203,26 +193,15 @@ $list_table ='<!-- Content Header (Page header) -->
                   </div><!-- /.box -->
                 </div>
               </div>
-        <?php
-
-            foreach ($db->fetch_all("sys_menu") as $isi) {
-
-            //jika url = url dari table menu
-            if (uri_segment(1)==$isi->url) {
-              //check edit permission
-              if ($role_act["up_act"]=="Y") {
-                '.$edit_button_view.'
-              } else {
-                  $edit ="";
-              }
-            if ($role_act[\'del_act\']==\'Y\') {
-                '.$delete_button_view.'
-            } else {
-                $del="";
-            }
-                             }
-            }
-
+ <?php
+  $edit ="";
+  $del="";
+ if ($db->userCan(uri_segment(0),"update_act")) {
+    '.$edit_button_view.'
+ }
+  if ($db->userCan(uri_segment(0),"delete_act")) {
+    '.$delete_button_view.'
+ }
         ?>
 '.$modal_template.'
     </section><!-- /.content -->
@@ -232,16 +211,6 @@ $list_table ='<!-- Content Header (Page header) -->
       '.$js_modal_edit.'
       var dtb_'.$modul_name.' = $("#dtb_'.$modul_name.'").DataTable({
               '.$standard_button."
-              \"dom\": \"<'row'<'col-sm-12'B>>\" + \"<'row'<'col-sm-6'l><'col-sm-6'f>>\" +\"<'row'<'col-sm-12'tr>>\" +\"<'row'<'col-sm-5'i><'col-sm-7'p>>\",
-
-              buttons: [
-              {
-                 extend: 'collection',
-                 text: 'Export Data',
-                 buttons: [ 'pdfHtml5', 'csvHtml5', 'copyHtml5', 'excelHtml5' ],
-
-              }
-              ],
            'bProcessing': true,
             'bServerSide': true,
             ".$column_def."
@@ -255,41 +224,28 @@ $list_table ='<!-- Content Header (Page header) -->
           },
         });
 
-  $('#dtb_".$modul_name."').on('draw.dt', function() {
-          init_selected()
+$('.bulk-check').on('click',function() { // bulk checked
+      var status = this.checked;
+      if (status) {
+        select_deselect('select');
+      } else {
+        select_deselect('unselect');
+      }
+      $('.check-selected').each( function() {
+        $(this).prop('checked',status);
       });
-
-      $('#select_all').on('click', function() {
-          select_deselect('select')
-      });
-      $('#deselect_all').on('click', function() {
-          select_deselect('unselect')
-  });
+      check_selected();
+});
 
 
 
-  $(document).on('click', '#dtb_".$modul_name." tbody tr td', function(event) {
+  $(document).on('click', '#dtb_".$modul_name." tbody tr .check-selected', function(event) {
       var btn = $(this).find('button');
       if (btn.length == 0) {
           $(this).parents('tr').toggleClass('DTTT_selected selected');
-          var selected = check_selected();
-          init_selected();
-
+          check_selected();
       }
   });
-
-
-
-  function init_selected() {
-      var selected = check_selected();
-      var btn_hide = $('#select_all, #deselect_all, #bulk_delete, .selected-data');
-      if (selected.length > 0) {
-          btn_hide.show()
-      } else {
-          btn_hide.hide()
-      }
-  }
-
 
   function check_selected() {
       var table_select = $('#dtb_".$modul_name." tbody tr.selected');
@@ -300,7 +256,14 @@ $list_table ='<!-- Content Header (Page header) -->
               array_data_delete.push(check_data)
           }
       });
-      $('.selected-data').text(array_data_delete.length + ' ".'<?=$lang["selected_data"];?>'."');
+      if (array_data_delete.length>0) {
+        $('.selected-data').text(array_data_delete.length + ' ".'<?=$lang["selected_data"];?>'."');
+        $('#bulk_delete').show();
+      } else {
+        $('.selected-data').text('');
+        $('.bulk-check').prop('checked',false);
+        $('#bulk_delete').hide();
+      }
       return array_data_delete
   }
 
@@ -311,7 +274,6 @@ $list_table ='<!-- Content Header (Page header) -->
       } else {
           $('#dtb_".$modul_name." tbody tr').removeClass('DTTT_selected selected')
       }
-      init_selected()
   }
 
 
@@ -344,6 +306,9 @@ $list_table ='<!-- Content Header (Page header) -->
                             },500);
                           } else if(responseText[index].status=='good') {
                             $('.error_data_delete').hide();
+                               $('.selected-data').text('');
+                               $('.bulk-check').prop('checked',false);
+                               $('#bulk_delete').hide();
                                $('#loadnya').hide();
                                $(anSelected).remove();
                                dtb_$modul_name.draw();
@@ -388,14 +353,10 @@ $list_table_off ='<!-- Content Header (Page header) -->
       <div class="box">
         <div class="box-header">
           <?php
-          foreach ($db->fetch_all("sys_menu") as $isi) {
-              if (uri_segment(1)==$isi->url) {
-                  if ($role_act["insert_act"]=="Y") {
-          ?>
-          <a '.$button_modal.' class="btn btn-primary"><i class="fa fa-plus"></i> <?php echo $lang["add_button"];?></a>
-          <?php
-                  }
-              }
+        if ($db->userCan(uri_segment(0),"insert_act")) {
+              ?>
+             <a '.$button_modal.' class="btn btn-primary"><i class="fa fa-plus"></i> <?php echo $lang["add_button"];?></a>
+              <?php
           }
           ?>
           </div><!-- /.box-header -->
@@ -433,27 +394,26 @@ $list_table_off ='<!-- Content Header (Page header) -->
   }
 
 $modul_data = '<?php
+session_start();
 include "../../inc/config.php";
 
 $columns = array('
 .$column_head.'
   );
 
-  //if you want to exclude column for searching, put columns name in array
+  //if you want to exclude column for searching, put columns name in quote and separate with comma if multi
   //'.$disable_search.'
   '.
   $set_numbering.'
 
   //set order by column
-  $datatable->set_order_by("'.$_POST['order_by'].'");
+  $datatable->setOrderBy("'.$_POST['order_by'].' '.$_POST['order_by_type'].'");
 
-  //set order by type
-  $datatable->set_order_type("'.$_POST['order_by_type'].'");
 
   //set group by column
   //'.$group_by.'
 
-  $query = $datatable->get_custom("select '.$column_head_query.$query_checkbox.$primary_for_query.' from '.$main_table.$join.'",$columns);
+  $query = $datatable->execQuery("select '.$column_head_query.$query_checkbox.$primary_for_query.' from '.$main_table.$join.'",$columns);
 
   //buat inisialisasi array data
   $data = array();
@@ -472,43 +432,28 @@ $columns = array('
   }
 
 //set data
-$datatable->set_data($data);
+$datatable->setData($data);
 //create our json
-$datatable->create_data();
+$datatable->createData();
 
 ?>';
 
 $main = '<?php
 //you can catch url from this file
-switch (uri_segment(2)) {
+switch (uri_segment(1)) {
   case "tambah":
-          foreach ($db->fetch_all("sys_menu") as $isi) {
-               if (uri_segment(1)==$isi->url&&uri_segment(2)=="tambah") {
-                          if ($role_act["insert_act"]=="Y") {
-                             include "'.$modul_name.'_add.php";
-                          } else {
-                            echo "permission denied";
-                          }
-                       }
-
-      }
+        if ($db->userCan(uri_segment(0),"insert_act")) {
+           include "'.$modul_name.'_add.php";
+        } 
     break;
   case "edit":
-    $data_edit = $db->fetch_single_row("'.$main_table.'","'.$primary_key.'",uri_segment(3));
-        foreach ($db->fetch_all("sys_menu") as $isi) {
-                      if (uri_segment(1)==$isi->url&&uri_segment(2)=="edit") {
-                          if ($role_act["up_act"]=="Y") {
-                             include "'.$modul_name.'_edit.php";
-                          } else {
-                            echo "permission denied";
-                          }
-                       }
-
-      }
-
+   $data_edit = $db->fetchSingleRow("'.$main_table.'","'.$primary_key.'",uri_segment(2));
+        if ($db->userCan(uri_segment(0),"update_act")) {
+           include "'.$modul_name.'_edit.php";
+        } 
     break;
       case "detail":
-    $data_edit = $db->fetch_single_row("'.$main_table.'","'.$primary_key.'",uri_segment(3));
+    $data_edit = $db->fetchSingleRow("'.$main_table.'","'.$primary_key.'",uri_segment(2));
     include "'.$modul_name.'_detail.php";
     break;
   default:
@@ -519,6 +464,7 @@ switch (uri_segment(2)) {
 ?>';
 
 $modul_add_modal ='<?php
+session_start();
 include "../../inc/config.php";
 ?>
  <div class="alert alert-danger error_data" style="display:none">
@@ -624,6 +570,7 @@ include "../../inc/config.php";
 '.$input_js_chaining;
 
 $modul_edit_modal ='<?php
+session_start();
 include "../../inc/config.php";
 '.$edit_data_modal.'
 ?>
@@ -1117,15 +1064,11 @@ $list_gallery = '<!-- Content Header (Page header) -->
                             <div class="album-top">
                                 <div class="col-md-2 ">
                                 <?php
-                                       foreach ($db->fetch_all("sys_menu") as $isi) {
-                                            if (uri_segment(1)==$isi->url) {
-                                                if ($role_act["insert_act"]=="Y") {
-                                            ?>
-                                          <a href="<?=base_index();?>'.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/tambah" class="btn btn-primary "><i class="fa fa-plus"></i> Add Album</a>
-                                            <?php
-                                            }
-                                         }
-                                      }
+                                  if ($db->userCan(uri_segment(0),"insert_act")) {
+                                     ?>
+                                     <a href="<?=base_index();?>'.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/tambah" class="btn btn-primary "><i class="fa fa-plus"></i> Add Album</a>
+                                     <?php
+                                  } 
                                       ?>
                                 </div>
                                 <div class="col-md-10">
@@ -1192,15 +1135,11 @@ $list_table_manual ='<!-- Content Header (Page header) -->
                             <div class="box">
                                  <div class="box-header">
                                 <?php
-                                foreach ($db->fetch_all("sys_menu") as $isi) {
-                                    if (uri_segment(1)==$isi->url) {
-                                        if ($role_act["insert_act"]=="Y") {
-                                ?>
-                                <a '.$button_modal.' class="btn btn-primary"><i class="fa fa-plus"></i> <?php echo $lang["add_button"];?></a>
-                                <?php
-                                        }
-                                    }
-                                }
+                                if ($db->userCan(uri_segment(0),"insert_act")) {
+                                      ?>
+                                     <a '.$button_modal.' class="btn btn-primary"><i class="fa fa-plus"></i> <?php echo $lang["add_button"];?></a>
+                                      <?php
+                                  }
                                 ?>
                   <p>&nbsp;</p>
 
@@ -1247,39 +1186,25 @@ $list_table_manual ='<!-- Content Header (Page header) -->
   }
 
 $main = '<?php
-switch (uri_segment(2)) {';
+switch (uri_segment(1)) {';
     if ($main_modal_status=='no') {
     $main.='
     case "tambah":
-          foreach ($db->fetch_all("sys_menu") as $isi) {
-               if (uri_segment(1)==$isi->url&&uri_segment(2)=="tambah") {
-                          if ($role_act["insert_act"]=="Y") {
-                             include "'.$modul_name.'_add.php";
-                          } else {
-                            echo "permission denied";
-                          }
-                       }
-
-      }
-    break;
-  case "edit":
-    $data_edit = $db->fetch_single_row("'.$main_table.'","'.$primary_key.'",uri_segment(3));
-        foreach ($db->fetch_all("sys_menu") as $isi) {
-                      if (uri_segment(1)==$isi->url&&uri_segment(2)=="edit") {
-                          if ($role_act["up_act"]=="Y") {
-                             include "'.$modul_name.'_edit.php";
-                          } else {
-                            echo "permission denied";
-                          }
-                       }
-
-      }
-
-    break;';
+          if ($db->userCan(uri_segment(0),"insert_act")) {
+             include "'.$modul_name.'_add.php";
+          } 
+      break;
+    case "edit":
+    $data_edit = $db->fetchSingleRow("'.$main_table.'","'.$primary_key.'",uri_segment(2));
+          if ($db->userCan(uri_segment(0),"update_act")) {
+             include "'.$modul_name.'_edit.php";
+          } 
+      break;
+      ';
     }
     $main.='
     case "detail":
-    $data_edit = $db->fetch_single_row("'.$main_table.'","'.$primary_key.'",uri_segment(3));
+    $data_edit = $db->fetchSingleRow("'.$main_table.'","'.$primary_key.'",uri_segment(2));
     include "'.$modul_name.'_detail.php";
     break;
     default:
@@ -1316,7 +1241,7 @@ switch ($_GET["act"]) {
     '.$for_uimagef_delete.'
     '.$for_uimager_delete.'
     '.$for_file_delete.'
-    $db->delete("'.$main_table.'","'.$primary_key.'",$_GET["id"]);
+    $db->delete("'.$main_table.'","'.$primary_key.'",$_POST["id"]);
     action_response($db->getErrorMessage());
     break;
    case "del_massal":

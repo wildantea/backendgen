@@ -290,12 +290,12 @@ foreach ($tes as $key => $value) {
           }';
         $upload_post_image = '
               if (isset($_FILES["'.$value[0].'"]["tmp_name"]) && $nama_file=="no") {
-                 $upload = $db->upload_file($_FILES["'.$value[0].'"]["tmp_name"],SITE_ROOT."'.$_POST['path_file'][$key].'/",$'.$key.'_name);
+                 $upload = $db->uploadFile($_FILES["'.$value[0].'"]["tmp_name"],SITE_ROOT."'.$_POST['path_file'][$key].'/",$'.$key.'_name);
 
               }';
         $upload_update_image = '
             if (isset($_FILES["'.$value[0].'"]["tmp_name"])) {
-               $upload = $db->upload_file($_FILES["'.$value[0].'"]["tmp_name"],SITE_ROOT."'.$_POST['path_file'][$key].'/",$'.$key.'_name);
+               $upload = $db->uploadFile($_FILES["'.$value[0].'"]["tmp_name"],SITE_ROOT."'.$_POST['path_file'][$key].'/",$'.$key.'_name);
 
             }';
         $top_post_image = '
@@ -304,7 +304,7 @@ foreach ($tes as $key => $value) {
           $'.$key.' = "'.$value[3].'";
           if (isset($_FILES["'.$value[0].'"]["tmp_name"]) && $'.$key.'=="no") {
             $'.$key.'_value = $_FILES["'.$value[0].'"]["tmp_name"];
-            $'.$key.'_name = $db->unique_name($_FILES["'.$value[0].'"]["name"]);
+            $'.$key.'_name = $db->uniqueName($_FILES["'.$value[0].'"]["name"]);
           }
     ';
     $data_put_update = '
@@ -317,7 +317,7 @@ foreach ($tes as $key => $value) {
               "allownull" => "'.$value[3].'",
               "extention" => "'.$value[4].'"
         ));
-        $'.$key.'_name = $db->unique_name(trim($_FILES["'.$value[0].'"]["name"]));
+        $'.$key.'_name = $db->uniqueName(trim($_FILES["'.$value[0].'"]["name"]));
         $'.$value[0].'_data =  array(
             "'.$key.'" => $'.$key.'_name
         );
@@ -345,12 +345,12 @@ foreach ($tes as $key => $value) {
           }';
         $upload_post_image = '
           if (isset($_FILES["'.$value[0].'"]["tmp_name"]) && $'.$key.'=="no") {
-             $upload = $db->upload_image_custom($_FILES["'.$value[0].'"]["type"],$_FILES["'.$value[0].'"]["tmp_name"],SITE_ROOT."'.$_POST['path_foto'][$key].'/",$'.$key.'_name,1200);
+             $upload = $db->uploadImageCustom($_FILES["'.$value[0].'"]["type"],$_FILES["'.$value[0].'"]["tmp_name"],SITE_ROOT."'.$_POST['path_foto'][$key].'/",$'.$key.'_name,1200);
 
           }';
                 $upload_update_image = '
           if (isset($_FILES["'.$value[0].'"]["tmp_name"])) {
-             $upload = $db->upload_image_custom(trim($_FILES["'.$value[0].'"]["type"]),$_FILES["'.$value[0].'"]["tmp_name"],SITE_ROOT."'.$_POST['path_foto'][$key].'/",$'.$key.'_name,1200);
+             $upload = $db->uploadImageCustom(trim($_FILES["'.$value[0].'"]["type"]),$_FILES["'.$value[0].'"]["tmp_name"],SITE_ROOT."'.$_POST['path_foto'][$key].'/",$'.$key.'_name,1200);
 
           }';
     $top_post_image = '
@@ -359,7 +359,7 @@ foreach ($tes as $key => $value) {
           $'.$key.' = "'.$value[3].'";
           if (isset($_FILES["'.$value[0].'"]["tmp_name"]) && $'.$key.'=="no") {
             $'.$key.'_value = $_FILES["'.$value[0].'"]["tmp_name"];
-            $'.$key.'_name = $db->unique_name(trim($_FILES["'.$value[0].'"]["name"]));
+            $'.$key.'_name = $db->uniqueName(trim($_FILES["'.$value[0].'"]["name"]));
           }
     ';
     $data_put_update = '
@@ -373,7 +373,7 @@ foreach ($tes as $key => $value) {
               "path_foto" => "'.$_POST['path_foto'][$key].'",
         ));
 
-        $'.$key.'_name = $db->unique_name(trim($_FILES["'.$value[0].'"]["name"]));
+        $'.$key.'_name = $db->uniqueName(trim($_FILES["'.$value[0].'"]["name"]));
 
         $'.$value[0].'_data =  array(
             "'.$key.'" =>  $'.$key.'_name
@@ -481,7 +481,7 @@ if ($query->rowCount()>0) {
   
 
 foreach ($query as $dt) {
-    $query_result[] = array_values($db->convert_obj_to_array($dt));
+    $query_result[] = array_values($db->converObjToArray($dt));
 }
 
 foreach ($query_result as $key => $value) {
@@ -534,11 +534,11 @@ include "template.php";
 
 
 //write form add
-$db->buat_file('../../../api/services/'.$service_name.'/'.$service_name.'.php',$service_template);
+$db->createFile('../../../api/services/'.$service_name.'/'.$service_name.'.php',$service_template);
 
 include "doc_template.php";
 
-$db->buat_file('../../../api/services/'.$service_name.'/doc.php',$doc_template);
+$db->createFile('../../../api/services/'.$service_name.'/doc.php',$doc_template);
 /*
 if ($_POST['create_auth']=='on') {
 	$create_auth = 'Y';
@@ -576,7 +576,7 @@ $db->insert('sys_services',$data);
 
 $id_service = $db->last_insert_id();
 
-$get_all_user = $db->fetch_all('sys_users');
+$get_all_user = $db->fetchAll('sys_users');
 $object_read = array();
 $object_create = array();
 $object_update = array();

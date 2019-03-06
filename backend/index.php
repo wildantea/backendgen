@@ -23,7 +23,7 @@ switch (uri_segment(0)) {
 
      //dynamic menu from database
 	//jika url yang di dipanggil ada di role user, include page
-	foreach ($db->fetch_all('sys_menu') as $isi) {
+	foreach ($db->fetchAll('sys_menu') as $isi) {
 		if (in_array($isi->url, $role_user)) {
 			if (uri_segment(0)==$isi->url && uri_segment(0)!='') {
 				include "modul/".$isi->nav_act."/".$isi->nav_act.".php";

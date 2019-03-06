@@ -12,7 +12,7 @@ if(isset($_POST["tampil"])=="on")
     }
 
 if ($_POST['type_menu']=='separator') {
-  $get_last_index_menu = $db->fetch_custom_single("select * from sys_menu where parent=0 order by urutan_menu desc");
+  $get_last_index_menu = $db->fetchCustomSingle("select * from sys_menu where parent=0 order by urutan_menu desc");
     $urutan_menu = $get_last_index_menu->urutan_menu+1;
      $data = array(
       'page_name'=>strtolower($_POST['page_name']),
@@ -25,7 +25,7 @@ if ($_POST['type_menu']=='separator') {
     $db->insert('sys_menu',$data);
     $last_id= $db->last_insert_id();
 
-  foreach ($db->fetch_all('sys_group_users') as $group) {
+  foreach ($db->fetchAll('sys_group_users') as $group) {
     if ($group->level=='root') {
       $db->query("insert into sys_menu_role(id_menu,group_level,read_act,insert_act,update_act,delete_act)
   values (".$last_id.",'".$group->level."','Y','Y','Y','Y')");
@@ -38,12 +38,12 @@ if ($_POST['type_menu']=='separator') {
   
 } elseif ($_POST['type_menu']=='main') {
   if ($_POST['parent']!=0) {
-  $get_last_index_menu = $db->fetch_custom_single("select * from sys_menu where parent='".$_POST['parent']."' order by urutan_menu desc");
+  $get_last_index_menu = $db->fetchCustomSingle("select * from sys_menu where parent='".$_POST['parent']."' order by urutan_menu desc");
   $urutan_menu = $get_last_index_menu->urutan_menu+1;
-      $parent = $db->fetch_single_row("sys_menu","id",$_POST['parent']);
+      $parent = $db->fetchSingleRow("sys_menu","id",$_POST['parent']);
       $parent = $parent->id;
   } else {
-  $get_last_index_menu = $db->fetch_custom_single("select * from sys_menu where parent=0 order by urutan_menu desc");
+  $get_last_index_menu = $db->fetchCustomSingle("select * from sys_menu where parent=0 order by urutan_menu desc");
   $urutan_menu = $get_last_index_menu->urutan_menu+1;
       $parent = 0;
   }
@@ -61,7 +61,7 @@ if ($_POST['type_menu']=='separator') {
 
     $last_id= $db->last_insert_id();
 
-  foreach ($db->fetch_all('sys_group_users') as $group) {
+  foreach ($db->fetchAll('sys_group_users') as $group) {
     if ($group->level=='root') {
       $db->query("insert into sys_menu_role(id_menu,group_level,read_act,insert_act,update_act,delete_act)
   values (".$last_id.",'".$group->level."','Y','Y','Y','Y')");
@@ -76,7 +76,7 @@ if ($_POST['type_menu']=='separator') {
 
 $modul_name = str_replace(" ", "_", strtolower($_POST['page_name']));
 
-$check_page_exist = $db->check_exist('sys_menu',array('nav_act' => $modul_name));
+$check_page_exist = $db->checkExist('sys_menu',array('nav_act' => $modul_name));
 if ($check_page_exist) {
   echo "The page with this name already exist";
   exit();
@@ -577,7 +577,7 @@ $radio_edit .= '
                   <label for="'.$value[1].'" class="control-label col-lg-2">'.$value[1].' '.$required_sign.'</label>
                   <div class="col-lg-10">
                       <?php
-                      $data_'.$key.' = $db->fetch_all("'.$from_radio.'");
+                      $data_'.$key.' = $db->fetchAll("'.$from_radio.'");
                       $i=1;
                       foreach ($data_'.$key.' as $dt_'.$key.') {
                       ?>
@@ -600,7 +600,7 @@ $radio_edit .= '
                   <label for="'.$value[1].'" class="control-label col-lg-2">'.$value[1].' '.$required_sign.'</label>
                   <div class="col-lg-10">
                    <?php
-                  $data_'.$key.' = $db->fetch_all("'.$from_radio.'");
+                  $data_'.$key.' = $db->fetchAll("'.$from_radio.'");
                   $i=1;
                   foreach ($data_'.$key.' as $dt_'.$key.') {
                   ?>
@@ -698,7 +698,7 @@ $radio_edit .= '
   $update='
                   <?php
 
-                  $'.$key.' = $db->fetch_single_row("'.$main_table.'","'.$primary_key.'",uri_segment(3))->'.$key.';
+                  $'.$key.' = $db->fetchSingleRow("'.$main_table.'","'.$primary_key.'",uri_segment(2))->'.$key.';
 
                   $'.$key.'s = explode(",", $'.$key.');
 
@@ -744,7 +744,7 @@ $radio_edit .= '
             if ($_POST['show_checkbox'][$key]=='horizontal') {
               $checkbox_option = '
                     <?php
-                    $data_'.$key.' = $db->fetch_all("'.$from_table_checkbox.'");
+                    $data_'.$key.' = $db->fetchAll("'.$from_table_checkbox.'");
                     $i=1;
                     foreach ($data_'.$key.' as $dt_'.$key.') {
                         ?>
@@ -761,7 +761,7 @@ $checkbox_edit= '
                     <?php
                       $'.$key.'s= explode(",", $data_edit->'.$key.');
 
-                      $data_'.$label_name[1].'s= $db->fetch_all("'.$from_table_checkbox.'");
+                      $data_'.$label_name[1].'s= $db->fetchAll("'.$from_table_checkbox.'");
                       $i=1;
                       foreach ($data_'.$label_name[1].'s as $dt_'.$label_name[1].') {
                     ?>
@@ -779,7 +779,7 @@ $checkbox_edit= '
 
         $checkbox_option = '
                     <?php
-                      $data_'.$key.' = $db->fetch_all("'.$from_table_checkbox.'");
+                      $data_'.$key.' = $db->fetchAll("'.$from_table_checkbox.'");
                       $i=1;
                       foreach ($data_'.$key.' as $dt_'.$key.') {
                           ?>
@@ -797,7 +797,7 @@ $checkbox_edit= '
 
                       $'.$key.'s= explode(",", $data_edit->'.$key.');
 
-                      $data_'.$label_name[1].'s= $db->fetch_all("'.$from_table_checkbox.'");
+                      $data_'.$label_name[1].'s= $db->fetchAll("'.$from_table_checkbox.'");
                       $i=1;
                       foreach ($data_'.$label_name[1].'s as $dt_'.$label_name[1].') {
                           ?>
@@ -882,7 +882,7 @@ $checkbox_edit= '
             if ($_POST['show_checkbox'][$key]=='horizontal') {
               $checkbox_option = '
                 <?php
-                  $data_'.$key.' = $db->fetch_all("'.$from_checkbox_normal.'");
+                  $data_'.$key.' = $db->fetchAll("'.$from_checkbox_normal.'");
                   $i=1;
                   foreach ($data_'.$key.' as $dt_'.$key.') {
                       ?>
@@ -899,7 +899,7 @@ $checkbox_edit= '
                 <?php
 
                   $'.$key.' = $db->query("select '.$primary_normal.' from '.$from_checkbox_normal.' inner join
-                 '.$foreign_table_checkbox.' on '.$primary_normal.'='.$foreign_key_from.' where '.$foreign_key_main_checkbox.'=?",array("'.$foreign_key_main_checkbox.'" => uri_segment(3)));
+                 '.$foreign_table_checkbox.' on '.$primary_normal.'='.$foreign_key_from.' where '.$foreign_key_main_checkbox.'=?",array("'.$foreign_key_main_checkbox.'" => uri_segment(2)));
 
                 $'.$key.'s = array();
                  foreach ($'.$key.' as $dt) {
@@ -909,7 +909,7 @@ $checkbox_edit= '
 
 
 
-                $data_'.$key.'s= $db->fetch_all("'.$from_checkbox_normal.'");
+                $data_'.$key.'s= $db->fetchAll("'.$from_checkbox_normal.'");
                 $i=1;
                 foreach ($data_'.$key.'s as $dt_'.$key.') {
                     ?>
@@ -927,7 +927,7 @@ $checkbox_edit= '
 
         $checkbox_option = '
                   <?php
-                    $data_'.$key.' = $db->fetch_all("'.$from_checkbox_normal.'");
+                    $data_'.$key.' = $db->fetchAll("'.$from_checkbox_normal.'");
                     $i=1;
                     foreach ($data_'.$key.' as $dt_'.$key.') {
                         ?>
@@ -944,7 +944,7 @@ $checkbox_edit= '
                   <?php
 
                     $'.$key.' = $db->query("select '.$primary_normal.' from '.$from_checkbox_normal.' inner join
-                   '.$foreign_table_checkbox.' on '.$primary_normal.'='.$foreign_key_from.' where '.$foreign_key_main_checkbox.'=?",array("'.$foreign_key_main_checkbox.'" => uri_segment(3)));
+                   '.$foreign_table_checkbox.' on '.$primary_normal.'='.$foreign_key_from.' where '.$foreign_key_main_checkbox.'=?",array("'.$foreign_key_main_checkbox.'" => uri_segment(2)));
 
                   $'.$key.'s = array();
                    foreach ($'.$key.' as $dt) {
@@ -953,7 +953,7 @@ $checkbox_edit= '
 
 
 
-                  $data_'.$key.'s= $db->fetch_all("'.$from_checkbox_normal.'");
+                  $data_'.$key.'s= $db->fetchAll("'.$from_checkbox_normal.'");
                   $i=1;
                   foreach ($data_'.$key.'s as $dt_'.$key.') {
                       ?>
@@ -1347,7 +1347,7 @@ $checkbox_edit= '
                   <div class="col-lg-10">
                       <select name="'.$ked.'_'.$for_id_label.'" id="'.$ked.'_'.$for_id_label.'" data-placeholder="Pilih '.$vald.' ..." class="form-control chzn-select" tabindex="2" '.$required.'>
                         <option value="">Pilih '.$array_label_chain[$chaining_increment].'</option>
-                        <?php foreach ($db->fetch_all("'.$ked.'") as $isi) {
+                        <?php foreach ($db->fetchAll("'.$ked.'") as $isi) {
                         echo "<option value=\'$isi->'.$primary_chain[$chaining_increment].'\'>$isi->'.$label_chain_col[$chaining_increment].'</option>";
                         } ?>
                       </select>
@@ -1415,7 +1415,7 @@ $checkbox_edit= '
           $edit_chaining .='
 
           <?php
-          $'.$ked.' = $db->fetch_custom_single("select '.$ked.'.'.$primary_key_chained_data[$chaining_increment_edit].' from '.$ked;
+          $'.$ked.' = $db->fetchCustomSingle("select '.$ked.'.'.$primary_key_chained_data[$chaining_increment_edit].' from '.$ked;
               $loop_chain = count($table_chained_data);
           for ($i=$chaining_increment_edit; $i < $loop_chain  ; $i++) {
                 if ($i!=$loop_chain-1) {
@@ -1438,7 +1438,7 @@ $checkbox_edit= '
                      <?php
                      ';
       if ($chaining_increment_edit==0) {
-          $edit_chaining .='foreach ($db->fetch_all("'.$ked.'") as $isi) {';
+          $edit_chaining .='foreach ($db->fetchAll("'.$ked.'") as $isi) {';
       } else {
           $edit_chaining .='foreach ($db->query("select * from '.$ked.' where '.$foreign_key_chained_data[$chaining_increment_edit].'=$'.$table_chained_data[$chaining_increment_edit-1].'->'.$primary_key_chained_data[$chaining_increment_edit-1].'") as $isi) {';
       }
@@ -1464,7 +1464,7 @@ $checkbox_edit= '
                   <label for="'.$value[1].'" class="control-label col-lg-2">'.$value[1].' '.$required_sign.'</label>
                   <div class="col-lg-10">
                   <?php
-                  $'.$table_name_last_chained.' = $db->fetch_custom_single("select '.$table_name_last_chained.'.'.$primary_key_last_chained.' from '.$table_name_last_chained.'
+                  $'.$table_name_last_chained.' = $db->fetchCustomSingle("select '.$table_name_last_chained.'.'.$primary_key_last_chained.' from '.$table_name_last_chained.'
                    where '.$table_name_last_chained.'.'.$primary_key_last_chained.'='.'$data_edit->'.$key.'");
                   ?>
                   <select name="'.$key.'" id="'.$table_name_last_chained.'_'.strtolower(str_replace(" ", "_", $value[1])).'" data-placeholder="Pilih '.$value[1].' ..." class="form-control chzn-select" tabindex="2" '.$required.'>
@@ -1507,7 +1507,7 @@ $checkbox_edit= '
         echo "<option value=\'$dt->'.$primary_key_chained_data[$next_increment].'\'>$dt->'.$label_chain_column_data[$next_increment].'</option>";
       }
       ';
-                $db->buat_file('../../modul/'.$modul_name.'/get_'.strtolower(str_replace(" ", "_", $label_chain_data[$next_increment])).'.php',$file_chain_data);
+                $db->createFile('../../modul/'.$modul_name.'/get_'.strtolower(str_replace(" ", "_", $label_chain_data[$next_increment])).'.php',$file_chain_data);
           } else {
 
 
@@ -1523,7 +1523,7 @@ $checkbox_edit= '
         echo "<option value=\'$dt->'.$primary_key_last_chained.'\'>$dt->'.$label_column_last_chained.'</option>";
       }
       ';
-                $db->buat_file('../../modul/'.$modul_name.'/get_'.strtolower(str_replace(" ", "_", $value[1])).'.php',$file_chain_data);
+                $db->createFile('../../modul/'.$modul_name.'/get_'.strtolower(str_replace(" ", "_", $value[1])).'.php',$file_chain_data);
 
           }
           $next_increment++;
@@ -1657,7 +1657,7 @@ $checkbox_edit= '
                         <div class="col-lg-10">
             <select  id="'.$key.'" name="'.$key.'" data-placeholder="Pilih '.$value[1].' ..." class="form-control chzn-select" tabindex="2" '.$required.'>
                <option value=""></option>
-               <?php foreach ($db->fetch_all("'.$from_table.'") as $isi) {
+               <?php foreach ($db->fetchAll("'.$from_table.'") as $isi) {
                   echo "<option value=\'$isi->'.$val[1].'\'>$isi->'.$val_name[1].'</option>";
                } ?>
               </select>
@@ -1668,7 +1668,7 @@ $checkbox_edit= '
                         <div class="col-lg-10">
               <select  id="'.$key.'" name="'.$key.'" data-placeholder="Pilih '.$value[1].'..." class="form-control chzn-select" tabindex="2" '.$required.'>
                <option value=""></option>
-               <?php foreach ($db->fetch_all("'.$from_table.'") as $isi) {
+               <?php foreach ($db->fetchAll("'.$from_table.'") as $isi) {
 
                   if ($data_edit->'.$key.'==$isi->'.$val[1].') {
                     echo "<option value=\'$isi->'.$val[1].'\' selected>$isi->'.$val_name[1].'</option>";
@@ -1683,7 +1683,7 @@ $checkbox_edit= '
         $detail='<div class="form-group">
                         <label for="'.$value[1].'" class="control-label col-lg-2">'.$value[1].' '.$required_sign.'</label>
                         <div class="col-lg-10">
-              <?php foreach ($db->fetch_all("'.$from_table.'") as $isi) {
+              <?php foreach ($db->fetchAll("'.$from_table.'") as $isi) {
                   if ($data_edit->'.$key.'==$isi->'.$val[1].') {
 
                     echo "<input disabled class=\'form-control\' type=\'text\' value=\'$isi->'.$val_name[1].'\'>";
@@ -1764,14 +1764,14 @@ $checkbox_edit= '
 
             } else {
               move_uploaded_file($_FILES["'.$key.'"]["tmp_name"], "../../../upload/'.$modul_name.'/".$_FILES[\''.$key.'\'][\'name\']);
-              $db->deleteDirectory("../../../upload/'.$modul_name.'/".$db->fetch_single_row("'.$main_table.'","'.$primary_key.'",$_POST["id"])->'.$key.');
+              $db->deleteDirectory("../../../upload/'.$modul_name.'/".$db->fetchSingleRow("'.$main_table.'","'.$primary_key.'",$_POST["id"])->'.$key.');
               $'.$key.' = array("'.$key.'"=>$_FILES["'.$key.'"]["name"]);
               $data = array_merge($data,$'.$key.');
             }
 
                          }';
 //delete image action
-$for_file_delete = '$db->deleteDirectory("../../../upload/'.$modul_name.'/".$db->fetch_single_row("'.$main_table.'","'.$primary_key.'",$_GET["id"])->'.$key.');';
+$for_file_delete = '$db->deleteDirectory("../../../upload/'.$modul_name.'/".$db->fetchSingleRow("'.$main_table.'","'.$primary_key.'",$_GET["id"])->'.$key.');';
 
         $detail='<div class="form-group">
                         <label for="'.$value[1].'" class="control-label col-lg-2">'.$value[1].' '.$required_sign.'</label>
@@ -1840,14 +1840,14 @@ $db->compressImage($_FILES["'.$key.'"]["type"],$_FILES["'.$key.'"]["tmp_name"],"
 
             } else {
 $db->compressImage($_FILES["'.$key.'"]["type"],$_FILES["'.$key.'"]["tmp_name"],"../../../upload/'.$modul_name.'/",$_FILES["'.$key.'"]["name"],'.$height_crop.','.$width_crop.');
-              $db->deleteDirectory("../../../upload/'.$modul_name.'/".$db->fetch_single_row("'.$main_table.'","'.$primary_key.'",$_POST["id"])->'.$key.');
+              $db->deleteDirectory("../../../upload/'.$modul_name.'/".$db->fetchSingleRow("'.$main_table.'","'.$primary_key.'",$_POST["id"])->'.$key.');
               $'.$key.' = array("'.$key.'"=>$_FILES["'.$key.'"]["name"]);
               $data = array_merge($data,$'.$key.');
             }
 
                          }';
    $for_uimager_delete .= '
-    $db->deleteDirectory("../../../upload/'.$modul_name.'/".$db->fetch_single_row("'.$main_table.'","'.$primary_key.'",$_GET["id"])->'.$key.');';
+    $db->deleteDirectory("../../../upload/'.$modul_name.'/".$db->fetchSingleRow("'.$main_table.'","'.$primary_key.'",$_GET["id"])->'.$key.');';
 
 $update = '<div class="form-group">
                         <label for="'.$value[1].'" class="control-label col-lg-2">'.$value[1].' '.$required_sign.'</label>
@@ -1921,14 +1921,14 @@ $update = '<div class="form-group">
             } else {
       move_uploaded_file($_FILES["'.$key.'"]["tmp_name"], "../../../upload/'.$modul_name.'/".$_FILES[\''.$key.'\'][\'name\']);
 
-              $db->deleteDirectory("../../../upload/'.$modul_name.'/".$db->fetch_single_row("'.$main_table.'","'.$primary_key.'",$_POST["id"])->'.$key.');
+              $db->deleteDirectory("../../../upload/'.$modul_name.'/".$db->fetchSingleRow("'.$main_table.'","'.$primary_key.'",$_POST["id"])->'.$key.');
               $'.$key.' = array("'.$key.'"=>$_FILES["'.$key.'"]["name"]);
               $data = array_merge($data,$'.$key.');
             }
 
                          }';
    $for_uimagef_delete .= '
-    $db->deleteDirectory("../../../upload/'.$modul_name.'/".$db->fetch_single_row("'.$main_table.'","'.$primary_key.'",$_GET["id"])->'.$key.');';
+    $db->deleteDirectory("../../../upload/'.$modul_name.'/".$db->fetchSingleRow("'.$main_table.'","'.$primary_key.'",$_GET["id"])->'.$key.');';
 
         $update = '<div class="form-group">
                         <label for="'.$value[1].'" class="control-label col-lg-2">'.$value[1].' '.$required_sign.'</label>
@@ -2093,7 +2093,7 @@ if ($_POST['crud_style']=='modal') {
 
     });
     ';
-    $edit_data_modal = '$data_edit = $db->fetch_single_row("'.$main_table.'","'.$primary_key.'",$_POST[\'id_data\']);';
+    $edit_data_modal = '$data_edit = $db->fetchSingleRow("'.$main_table.'","'.$primary_key.'",$_POST[\'id_data\']);';
         $button_modal = 'id="add_'.$modul_name.'"';
     $modal_template ='
     <div class="modal" id="modal_'.$modul_name.'" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"> <div class="modal-dialog modal-lg"> <div class="modal-content"><div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button> <h4 class="modal-title"><?php echo $lang["add_button"];?> '.ucwords($_POST['page_name']).'</h4> </div> <div class="modal-body" id="isi_'.$modul_name.'"> </div> </div><!-- /.modal-content --> </div><!-- /.modal-dialog --> </div>
@@ -2210,7 +2210,7 @@ $images[] = "../../../../upload/foto_'.$_POST['album_table'].'/".$filename;
 <?php
     break;
 case "hapus_foto":
-  $db->deleteDirectory("../../../upload/foto_'.$_POST['album_table'].'/".$db->fetch_single_row("'.$_POST['foreign_album'].'","'.$_POST['foreign_album_primary'].'",$_GET["id"])->'.$_POST['foreign_album_nama'].');
+  $db->deleteDirectory("../../../upload/foto_'.$_POST['album_table'].'/".$db->fetchSingleRow("'.$_POST['foreign_album'].'","'.$_POST['foreign_album_primary'].'",$_GET["id"])->'.$_POST['foreign_album_nama'].');
     $db->delete("'.$_POST['foreign_album'].'","'.$_POST['foreign_album_primary'].'",$_GET["id"]);
   break;
   default:
@@ -2461,8 +2461,8 @@ elseif ($_POST['method_table']=='dtb_server') {
     $column_head .= "
     '$main_table.$primary_key',";
 
-$disable_search = '$new_table->disable_search = array'."('$key','$main_table.$primary_key');";
-$group_by = '$new_table->group_by = "group by '.$main_table.'.'.$primary_key.'";';
+$disable_search = '$datatable->setDisableSearchColumn("'.$main_table.'.'.$key.'","'.$main_table.'.'.$primary_key.'");';
+$group_by = '$datatable->setGroupBy("'.$main_table.'.'.$primary_key.'");';
 
   $total_column = count($assoc_col_new_col);
   $total_column = $total_column;
@@ -2475,13 +2475,23 @@ $group_by = '$new_table->group_by = "group by '.$main_table.'.'.$primary_key.'";
      $total_column = $total_column+1;
      $set_numbering = '
   //set numbering is true
-  $datatable->set_numbering_status(1);';
-    $head_no = "<th>No</th>";
+  $datatable->setNumberingStatus(1);';
+    $head_no = "<th style='padding-right:0;'><label class='mt-checkbox mt-checkbox-single mt-checkbox-outline '> <input type='checkbox' class='group-checkable bulk-check'> <span></span></label>#</th>";
     $i_init = '$i=1;';
     $i_increment = '$i++;';
 
-    $create_number = '  $ResultData[] = $datatable->number($i);';
-  } 
+    $create_number = '$ResultData[] = \'<label class="mt-checkbox mt-checkbox-single mt-checkbox-outline"> <input type="checkbox" class="group-checkable check-selected"> <span></span></label>\'.$datatable->number($i);';
+  } else {
+    $total_column = $total_column+1;
+    $set_numbering = '
+    //set numbering is true
+    $datatable->setNumberingStatus(1);';
+    $head_no = "<th style='padding-right:0;'><label class='mt-checkbox mt-checkbox-single mt-checkbox-outline '> <input type='checkbox' class='group-checkable bulk-check'> <span></span></label></th>";
+    $i_init = '$i=1;';
+    $i_increment = '$i++;';
+
+    $create_number = '$ResultData[] = \'<label class="mt-checkbox mt-checkbox-single mt-checkbox-outline"> <input type="checkbox" class="group-checkable check-selected"> <span></span></label>\';';
+  }
    
 
     if ($_POST['button_action']=='standard') {
@@ -2518,8 +2528,7 @@ $group_by = '$new_table->group_by = "group by '.$main_table.'.'.$primary_key.'";
              "targets": [0],
              "width" : "5%",
               "orderable": false,
-              "searchable": false,
-              "className": "dt-center"
+              "searchable": false
             } ],
       ';
   } else {
@@ -2547,8 +2556,7 @@ $group_by = '$new_table->group_by = "group by '.$main_table.'.'.$primary_key.'";
              "targets": [0],
               "width" : "5%",
               "orderable": false,
-              "searchable": false,
-              "className": "dt-center"
+              "searchable": false
             } ],
       ';
 
@@ -2592,12 +2600,12 @@ $group_by = '$new_table->group_by = "group by '.$main_table.'.'.$primary_key.'";
         '.$loop_number.$col.'
         <td>
           <?php
-          echo \'<a href="\'.base_index().\''.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/detail/\'.$isi->'.$primary_key_only_col.'.\'" class="btn btn-success "><i class="fa fa-eye"></i></a> \';
-          if($role_act["up_act"]=="Y") {
-            echo \'<a '.$button_edit_modal_manual.'="\'.base_index().\''.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/edit/\'.$isi->'.$primary_key_only_col.'.\'" data-id="\'.$isi->'.$primary_key_only_col.'.\'" class="btn edit_data btn-primary "><i class="fa fa-pencil"></i></a> \';
+          echo \'<a href="\'.base_index().\''.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/detail/\'.$isi->'.$primary_key_only_col.'.\'" class="btn btn-success btn-sm"><i class="fa fa-eye"></i></a> \';
+          if ($db->userCan(uri_segment(0),"update_act")) {
+            echo \'<a '.$button_edit_modal_manual.'="\'.base_index().\''.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/edit/\'.$isi->'.$primary_key_only_col.'.\'" data-id="\'.$isi->'.$primary_key_only_col.'.\'" class="btn edit_data btn-primary btn-sm"><i class="fa fa-pencil"></i></a> \';
           }
-          if($role_act["del_act"]=="Y") {
-            echo \'<button class="btn btn-danger hapus"  data-uri="\'.base_admin().\'modul/'.strtolower(str_replace(" ", "_", $_POST['page_name'])).'/'.$modul_name.'_action.php" data-variable="\'dtb_'.$modul_name.'\'" data-id="\'.$isi->'.$primary_key_only_col.'.\'"><i class="fa fa-trash-o"></i></button>\';
+          if ($db->userCan(uri_segment(0),"delete_act")) {
+            echo \'<button class="btn btn-danger btn-sm hapus"  data-uri="\'.base_admin().\'modul/'.strtolower(str_replace(" ", "_", $_POST['page_name'])).'/'.$modul_name.'_action.php" data-variable="dtb_'.$modul_name.'" data-id="\'.$isi->'.$primary_key_only_col.'.\'"><i class="fa fa-trash-o"></i></button>\';
           }
         ?>
         </td>
@@ -2616,12 +2624,12 @@ $group_by = '$new_table->group_by = "group by '.$main_table.'.'.$primary_key.'";
           <td align="center"><?=$i;?></td>'.$col.'
         <td>
             <?php
-            echo \'<a href="\'.base_index().\''.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/detail/\'.$isi->'.$primary_key_only_col.'.\'" class="btn btn-success "><i class="fa fa-eye"></i></a> \';
-            if($role_act["up_act"]=="Y") {
-              echo \'<a '.$button_edit_modal_manual.'="\'.base_index().\''.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/edit/\'.$isi->'.$primary_key_only_col.'.\'" data-id="\'.$isi->'.$primary_key_only_col.'.\'" class="btn edit_data btn-primary "><i class="fa fa-pencil"></i></a> \';
+            echo \'<a href="\'.base_index().\''.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/detail/\'.$isi->'.$primary_key_only_col.'.\'" class="btn btn-success btn-sm"><i class="fa fa-eye"></i></a> \';
+            if ($db->userCan(uri_segment(0),"update_act")) {
+              echo \'<a '.$button_edit_modal_manual.'="\'.base_index().\''.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/edit/\'.$isi->'.$primary_key_only_col.'.\'" data-id="\'.$isi->'.$primary_key_only_col.'.\'" class="btn edit_data btn-primary btn-sm"><i class="fa fa-pencil"></i></a> \';
             }
-            if($role_act["del_act"]=="Y") {
-              echo \'<button class="btn btn-danger hapus " data-uri="\'.base_admin().\'modul/'.strtolower(str_replace(" ", "_", $_POST['page_name'])).'/'.$modul_name.'_action.php" data-id="\'.$isi->'.$primary_key_only_col.'.\'"><i class="fa fa-trash-o"></i></button>\';
+            if ($db->userCan(uri_segment(0),"delete_act")) {
+              echo \'<button class="btn btn-danger btn-sm hapus " data-uri="\'.base_admin().\'modul/'.strtolower(str_replace(" ", "_", $_POST['page_name'])).'/'.$modul_name.'_action.php" data-id="\'.$isi->'.$primary_key_only_col.'.\'"><i class="fa fa-trash-o"></i></button>\';
             }
           ?>
         </td>
@@ -2678,13 +2686,13 @@ $group_by = '$new_table->group_by = "group by '.$main_table.'.'.$primary_key.'";
         <tr id="line_<?=$isi->'.$primary_key_only_col.';?>">
           '.$set_no.''.$col.'
           <td>
-          <a href="<?=base_index();?>'.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/detail/<?=$isi->'.$primary_key_only_col.';?>" class="btn btn-success "><i class="fa fa-eye"></i></a>
+          <a href="<?=base_index();?>'.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/detail/<?=$isi->'.$primary_key_only_col.';?>" class="btn btn-success btn-sm"><i class="fa fa-eye"></i></a>
           <?php
-            if($role_act["up_act"]=="Y") {
-              echo "<a href=\'".base_index()."'.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/edit/".$isi->'.$primary_key_only_col.'."\' data-id=\'".$isi->'.$primary_key_only_col.'."\' class=\'btn edit_data btn-primary\'><i class=\'fa fa-pencil\'></i></a> ";
+            if ($db->userCan(uri_segment(0),"update_act")) {
+              echo "<a href=\'".base_index()."'.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/edit/".$isi->'.$primary_key_only_col.'."\' data-id=\'".$isi->'.$primary_key_only_col.'."\' class=\'btn edit_data btn-primary btn-sm\'><i class=\'fa fa-pencil\'></i></a> ";
             }
-            if($role_act["del_act"]=="Y") {
-              echo "<button class=\'btn btn-danger hapus_manual\' data-uri=\'".base_admin()."modul/'.strtolower(str_replace(" ", "_", $_POST['page_name'])).'/'.$modul_name.'_action.php\' data-id=\'".$isi->'.$primary_key_only_col.'."\'><i class=\'fa fa-trash-o\'></i></button>";
+            if ($db->userCan(uri_segment(0),"delete_act")) {
+              echo "<button class=\'btn btn-danger btn-sm hapus_manual\' data-uri=\'".base_admin()."modul/'.strtolower(str_replace(" ", "_", $_POST['page_name'])).'/'.$modul_name.'_action.php\' data-id=\'".$isi->'.$primary_key_only_col.'."\'><i class=\'fa fa-trash-o\'></i></button>";
             }
             ?>
           </td>
@@ -2734,13 +2742,13 @@ $group_by = '$new_table->group_by = "group by '.$main_table.'.'.$primary_key.'";
         <tr id="line_<?=$isi->'.$primary_key_only_col.';?>">
           <td align="center"><?=$no;?></td>'.$col.'
           <td>
-            <a href="<?=base_index();?>'.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/detail/<?=$isi->'.$primary_key_only_col.';?>" class="btn btn-success "><i class="fa fa-eye"></i></a>
+            <a href="<?=base_index();?>'.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/detail/<?=$isi->'.$primary_key_only_col.';?>" class="btn btn-sm btn-success "><i class="fa fa-eye"></i></a>
             <?php
-              if($role_act["up_act"]=="Y") {
-                echo "<a href=\'".base_index()."'.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/edit/".$isi->'.$primary_key_only_col.'."\' data-id=\'".$isi->'.$primary_key_only_col.'."\' class=\'btn edit_data btn-primary\'><i class=\'fa fa-pencil\'></i></a> ";
+              if ($db->userCan(uri_segment(0),"update_act")) {
+                echo "<a href=\'".base_index()."'.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/edit/".$isi->'.$primary_key_only_col.'."\' data-id=\'".$isi->'.$primary_key_only_col.'."\' class=\'btn edit_data btn-primary btn-sm\'><i class=\'fa fa-pencil\'></i></a> ";
               }
-              if($role_act["del_act"]=="Y") {
-                echo "<button class=\'btn btn-danger hapus_manual\' data-uri=\'".base_admin()."modul/'.strtolower(str_replace(" ", "_", $_POST['page_name'])).'/'.$modul_name.'_action.php\' data-id=\'".$isi->'.$primary_key_only_col.'."\'><i class=\'fa fa-trash-o\'></i></button>";
+              if ($db->userCan(uri_segment(0),"delete_act")) {
+                echo "<button class=\'btn btn-danger btn-sm hapus_manual\' data-uri=\'".base_admin()."modul/'.strtolower(str_replace(" ", "_", $_POST['page_name'])).'/'.$modul_name.'_action.php\' data-id=\'".$isi->'.$primary_key_only_col.'."\'><i class=\'fa fa-trash-o\'></i></button>";
               }
               ?>
           </td>
@@ -2786,50 +2794,50 @@ if ($_POST['crud_style']=='modal') {
     $modul_edit_template = $modul_edit;
 }
 //write form add
-$db->buat_file('../../modul/'.$modul_name.'/'.$modul_name.'_add.php',$modul_add_template);
+$db->createFile('../../modul/'.$modul_name.'/'.$modul_name.'_add.php',$modul_add_template);
 //write main modul action
-$db->buat_file('../../modul/'.$modul_name.'/'.$modul_name.'.php',$main);
+$db->createFile('../../modul/'.$modul_name.'/'.$modul_name.'.php',$main);
 
 //write modul data
 if ($_POST['method_table']=='dtb_server') {
-$db->buat_file('../../modul/'.$modul_name.'/'.$modul_name.'_data.php',$modul_data);
+$db->createFile('../../modul/'.$modul_name.'/'.$modul_name.'_data.php',$modul_data);
 //write list table
-$db->buat_file('../../modul/'.$modul_name.'/'.$modul_name.'_view.php',$list_table);
+$db->createFile('../../modul/'.$modul_name.'/'.$modul_name.'_view.php',$list_table);
 //write modul action
-$db->buat_file('../../modul/'.$modul_name.'/'.$modul_name.'_action.php',$modul_action);
+$db->createFile('../../modul/'.$modul_name.'/'.$modul_name.'_action.php',$modul_action);
 //write modul edit form
-$db->buat_file('../../modul/'.$modul_name.'/'.$modul_name.'_edit.php',$modul_edit_template);
+$db->createFile('../../modul/'.$modul_name.'/'.$modul_name.'_edit.php',$modul_edit_template);
 //write detial form
-$db->buat_file('../../modul/'.$modul_name.'/'.$modul_name.'_detail.php',$modul_detail);
+$db->createFile('../../modul/'.$modul_name.'/'.$modul_name.'_detail.php',$modul_detail);
 
 } elseif($_POST['method_table']=='dtb_manual') {
   //write list table
-$db->buat_file('../../modul/'.$modul_name.'/'.$modul_name.'_view.php',$list_table_off);
+$db->createFile('../../modul/'.$modul_name.'/'.$modul_name.'_view.php',$list_table_off);
 //write modul action
-$db->buat_file('../../modul/'.$modul_name.'/'.$modul_name.'_action.php',$modul_action);
+$db->createFile('../../modul/'.$modul_name.'/'.$modul_name.'_action.php',$modul_action);
 //write modul edit form
-$db->buat_file('../../modul/'.$modul_name.'/'.$modul_name.'_edit.php',$modul_edit_template);
+$db->createFile('../../modul/'.$modul_name.'/'.$modul_name.'_edit.php',$modul_edit_template);
 //write detial form
-$db->buat_file('../../modul/'.$modul_name.'/'.$modul_name.'_detail.php',$modul_detail);
+$db->createFile('../../modul/'.$modul_name.'/'.$modul_name.'_detail.php',$modul_detail);
 
 } elseif($_POST['method_table']=='manual_pagination') {
     //write list table
-  $db->buat_file('../../modul/'.$modul_name.'/'.$modul_name.'_view.php',$list_table_manual);
+  $db->createFile('../../modul/'.$modul_name.'/'.$modul_name.'_view.php',$list_table_manual);
   //write modul action
-$db->buat_file('../../modul/'.$modul_name.'/'.$modul_name.'_action.php',$modul_action);
+$db->createFile('../../modul/'.$modul_name.'/'.$modul_name.'_action.php',$modul_action);
 //write modul edit form
-$db->buat_file('../../modul/'.$modul_name.'/'.$modul_name.'_edit.php',$modul_edit_template);
+$db->createFile('../../modul/'.$modul_name.'/'.$modul_name.'_edit.php',$modul_edit_template);
 //write detial form
-$db->buat_file('../../modul/'.$modul_name.'/'.$modul_name.'_detail.php',$modul_detail);
+$db->createFile('../../modul/'.$modul_name.'/'.$modul_name.'_detail.php',$modul_detail);
 } elseif($_POST['method_table']=='gallery') {
   //write list table
-  $db->buat_file('../../modul/'.$modul_name.'/'.$modul_name.'_view.php',$list_gallery);
+  $db->createFile('../../modul/'.$modul_name.'/'.$modul_name.'_view.php',$list_gallery);
 //write gallery action
-$db->buat_file('../../modul/'.$modul_name.'/'.$modul_name.'_action.php',$input_gallery_action);
+$db->createFile('../../modul/'.$modul_name.'/'.$modul_name.'_action.php',$input_gallery_action);
 //write gallery detail
-$db->buat_file('../../modul/'.$modul_name.'/'.$modul_name.'_detail.php',$gallery_detail);
+$db->createFile('../../modul/'.$modul_name.'/'.$modul_name.'_detail.php',$gallery_detail);
 //write remote gallery file
-$db->buat_file('../../modul/'.$modul_name.'/'.$modul_name.'_remote.php',$gallery_remote);
+$db->createFile('../../modul/'.$modul_name.'/'.$modul_name.'_remote.php',$gallery_remote);
 }
 
 
@@ -2839,7 +2847,7 @@ $db->buat_file('../../modul/'.$modul_name.'/'.$modul_name.'_remote.php',$gallery
 if ($_POST['parent']==0) {
     $parent = 0;
 } else {
-    $get_last_index_menu = $db->fetch_custom_single("select * from sys_menu where parent='".$_POST['parent']."' order by urutan_menu desc");
+    $get_last_index_menu = $db->fetchCustomSingle("select * from sys_menu where parent='".$_POST['parent']."' order by urutan_menu desc");
     $urutan_menu = $get_last_index_menu+1;
     $parent = $_POST['parent'];
 }
@@ -2859,7 +2867,7 @@ $data = array(
 
     $last_id= $db->last_insert_id();
 
-  foreach ($db->fetch_all('sys_group_users') as $group) {
+  foreach ($db->fetchAll('sys_group_users') as $group) {
 
     print_r($group);
     if ($group->level=='root') {

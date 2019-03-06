@@ -42,7 +42,7 @@
                     echo "<option value='0' selected>None</option>";
                   } else {
                     echo "<option value='0'>None</option>";
-                    $get_parent = $db->fetch_single_row('sys_menu','id',$data_edit->parent);
+                    $get_parent = $db->fetchSingleRow('sys_menu','id',$data_edit->parent);
                      echo "<option value='$get_parent->id' selected>$get_parent->page_name</option>";
                   }
 

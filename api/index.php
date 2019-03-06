@@ -76,7 +76,7 @@ function echoResponse($status_code, $response,$type) {
         $api_key = $headers['Authorization'];
 
         //check token db
-        $check_key = $db->check_exist('sys_users',array('token' => $api_key));
+        $check_key = $db->checkExist('sys_users',array('token' => $api_key));
 
         // validating api key
         if ($check_key==true) {
@@ -136,8 +136,8 @@ function auth_data($app,$db,$type) {
       'password' => md5($password)
       );
 
-    if ($db->check_exist('sys_users',$data)) {
-      $dt = $db->fetch_single_row('sys_users','username',$username);
+    if ($db->checkExist('sys_users',$data)) {
+      $dt = $db->fetchSingleRow('sys_users','username',$username);
       $response = array();
       $response['user'] = $dt->first_name." ".$dt->last_name; //Just return the user name for reference
             $response['token'] = bin2hex(openssl_random_pseudo_bytes(16)); //generate a random token

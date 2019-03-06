@@ -12,21 +12,18 @@ $columns = array(
   );
 
   //if you want to exclude column for searching, put columns name in array
-  //$new_table->disable_search = array('aktif','sys_users.id');
+  //$datatable->setDisableSearchColumn('aktif','sys_users.id');
   
   //set numbering is true
-  $datatable->set_numbering_status(1);
+  $datatable->setNumberingStatus(1);
 
   //set order by column
-  $datatable->set_order_by("sys_users.id");
-
-  //set order by type
-  $datatable->set_order_type("desc");
+  $datatable->setOrderBy("sys_users.id desc");
 
   //set group by column
-  //$new_table->group_by = "group by sys_users.id";
+  //$datatable->setGroupBy("group by sys_users.id");
 
-  $query = $datatable->get_custom("select sys_users.full_name,sys_users.username,sys_users.email,sys_group_users.level_name,sys_users.aktif,sys_users.foto_user,sys_users.id from sys_users inner join sys_group_users on sys_users.group_level=sys_group_users.level ",$columns);
+  $query = $datatable->execQuery("select sys_users.full_name,sys_users.username,sys_users.email,sys_group_users.level_name,sys_users.aktif,sys_users.foto_user,sys_users.id from sys_users inner join sys_group_users on sys_users.group_level=sys_group_users.level ",$columns);
 
   //buat inisialisasi array data
   $data = array();
@@ -62,8 +59,8 @@ $columns = array(
   }
 
 //set data
-$datatable->set_data($data);
+$datatable->setData($data);
 //create our json
-$datatable->create_data();
+$datatable->createData();
 
 ?>

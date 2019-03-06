@@ -56,7 +56,7 @@
 <div class="form-group">
                         <label for="Group user" class="control-label col-lg-2">Group user <span style="color:#FF0000">*</span></label>
                         <div class="col-lg-10">
-              <?php foreach ($db->fetch_all("sys_group_users") as $isi) {
+              <?php foreach ($db->fetchAll("sys_group_users") as $isi) {
                   if ($data_edit->group_level==$isi->level) {
 
                     echo "<input disabled class='form-control' type='text' value='$isi->level_name'>";

@@ -313,7 +313,7 @@ require(\'../../inc/lib/SpreadsheetReader.php\');
     if ($key>0) {
 
       if ($val[0]!=\'\') {
-          $check = $db->check_exist(\''.$main_table.'\',array(\'kode_mk\' => filter_var($val[0], FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW|FILTER_FLAG_STRIP_HIGH),\'kur_id\'=>$_POST[\'id_kur\']));
+          $check = $db->checkExist(\''.$main_table.'\',array(\'kode_mk\' => filter_var($val[0], FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW|FILTER_FLAG_STRIP_HIGH),\'kur_id\'=>$_POST[\'id_kur\']));
           if ($check==true) {
             $error_count++;
             $error[] = $val[0]." Sudah Ada";
