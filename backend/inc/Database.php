@@ -14,6 +14,8 @@ class Database
     private $eof_ctrl_dir = "\x50\x4b\x05\x06\x00\x00\x00\x00";
     private $old_offset = 0;
     private $error_message = '';
+    public $is_transaction = 0;
+    private $data_exist;
     
     public function __construct($hostname, $port_number, $username_db, $password_db, $db_name)
     {
@@ -50,9 +52,35 @@ class Database
         }
         catch (PDOException $exception) {
             $this->setErrorMessage($exception->getMessage());
-            return false;
+            echo $this->getErrorMessage();
+            exit();
         }
         
+    }
+
+    /**
+     * begin a transaction.
+     */
+    public function begin_transaction()
+    {
+        $this->pdo->setAttribute(PDO::ATTR_AUTOCOMMIT, 0);
+        $this->pdo->beginTransaction();
+    }
+    /**
+     * commit the transaction.
+     */
+    public function commit()
+    {
+        $this->pdo->commit();
+        $this->pdo->setAttribute(PDO::ATTR_AUTOCOMMIT, 1);
+    }
+    /**
+     * rollback the transaction.
+     */
+    public function rollback()
+    {
+        $this->pdo->rollBack();
+        $this->pdo->setAttribute(PDO::ATTR_AUTOCOMMIT, 1);
     }
     
     /**
@@ -85,11 +113,17 @@ class Database
         $nilai = array(
             $val
         );
-        $sel   = $this->pdo->prepare("SELECT * FROM $table WHERE $col=?");
-        $sel->execute($nilai);
-        $sel->setFetchMode(PDO::FETCH_OBJ);
-        $obj = $sel->fetch();
-        return $obj;
+        $sel = $this->pdo->prepare("SELECT * FROM $table WHERE $col=?");
+        try {
+            $sel->execute($nilai);
+            $sel->setFetchMode(PDO::FETCH_OBJ);
+            $obj = $sel->fetch();
+            return $obj;
+        }
+        catch (PDOException $exception) {
+            $this->setErrorMessage($exception->getMessage());
+            echo $this->getErrorMessage();
+        }
     }
     
     public function fetchCustomSingle($sql, $data = null)
@@ -98,14 +132,20 @@ class Database
             $dat = array_values($data);
         }
         $sel = $this->pdo->prepare($sql);
-        if ($data !== null) {
-            $sel->execute($dat);
-        } else {
-            $sel->execute();
+        try {
+            if ($data !== null) {
+                $sel->execute($dat);
+            } else {
+                $sel->execute();
+            }
+            $sel->setFetchMode(PDO::FETCH_OBJ);
+            $obj = $sel->fetch();
+            return $obj;
         }
-        $sel->setFetchMode(PDO::FETCH_OBJ);
-        $obj = $sel->fetch();
-        return $obj;
+        catch (PDOException $exception) {
+            $this->setErrorMessage($exception->getMessage());
+            echo $this->getErrorMessage();
+        }
     }
     
     /**
@@ -116,57 +156,15 @@ class Database
     public function fetchAll($table)
     {
         $sel = $this->pdo->prepare("SELECT * FROM $table");
-        $sel->execute();
-        $sel->setFetchMode(PDO::FETCH_OBJ);
-        return $sel;
-    }
-    /**
-     * fetch multiple row
-     * @param  string $table table name
-     * @param  array $dat specific column selection
-     * @return array recordset
-     */
-    public function fetchCol($table, $dat)
-    {
-        if ($dat !== null)
-            $cols = array_values($dat);
-        $col = implode(', ', $cols);
-        $sel = $this->pdo->prepare("SELECT $col from $table");
-        $sel->execute();
-        $sel->setFetchMode(PDO::FETCH_OBJ);
-        return $sel;
-    }
-    
-    /**
-     * fetch row with condition
-     * @param  string $table table name
-     * @param  array $col which columns name would be select
-     * @param  array $where what column will be the condition
-     * @return array recordset
-     */
-    public function fetchMultiRow($table, $col, $where)
-    {
-        
-        $data  = array_values($where);
-        //grab keys
-        $cols  = array_keys($where);
-        $colum = implode(', ', $col);
-        foreach ($cols as $key) {
-            $keys   = $key . "=?";
-            $mark[] = $keys;
+        try {
+            $sel->execute();
+            $sel->setFetchMode(PDO::FETCH_OBJ);
+            return $sel;
         }
-        
-        $jum = count($where);
-        if ($jum > 1) {
-            $im  = implode(' and  ', $mark);
-            $sel = $this->pdo->prepare("SELECT $colum from $table WHERE $im");
-        } else {
-            $im  = implode('', $mark);
-            $sel = $this->pdo->prepare("SELECT $colum from $table WHERE $im");
+        catch (PDOException $exception) {
+            $this->setErrorMessage($exception->getMessage());
+            echo $this->getErrorMessage();
         }
-        $sel->execute($data);
-        $sel->setFetchMode(PDO::FETCH_OBJ);
-        return $sel;
     }
     
     /**
@@ -188,50 +186,34 @@ class Database
             $mark[] = $keys;
         }
         
-        $jum = count($dat);
-        if ($jum > 1) {
+        $count = count($dat);
+        if ($count > 1) {
             $im  = implode(' and  ', $mark);
-            $sel = $this->pdo->prepare("SELECT $col from $table WHERE $im");
+            $sel = $this->pdo->prepare("SELECT * from $table WHERE $im");
         } else {
             $im  = implode('', $mark);
-            $sel = $this->pdo->prepare("SELECT $col from $table WHERE $im");
+            $sel = $this->pdo->prepare("SELECT * from $table WHERE $im");
         }
         $sel->execute($data);
         $sel->setFetchMode(PDO::FETCH_OBJ);
-        $jum              = $sel->rowCount();
-        $this->data_exist = $sel;
-        if ($jum > 0) {
-            return true;
+        $count = $sel->rowCount();
+        if ($count > 0) {
+            $obj = $sel->fetch();
+            $this->data_exist = $obj;
+            return $this;
         } else {
             return false;
         }
     }
-    
-    public function checkExistData($table, $dat)
-    {
-        $data = array_values($dat);
-        //grab keys
-        $cols = array_keys($dat);
-        $col  = implode(', ', $cols);
-        
-        foreach ($cols as $key) {
-            $keys   = $key . "=?";
-            $mark[] = $keys;
-        }
-        
-        $jum = count($dat);
-        if ($jum > 1) {
-            $im  = implode(' and  ', $mark);
-            $sel = $this->pdo->prepare("SELECT * from $table WHERE $im");
-        } else {
-            $im  = implode('', $mark);
-            $sel = $this->pdo->prepare("SELECT * from $table WHERE $im");
-        }
-        $sel->execute($data);
-        $sel->setFetchMode(PDO::FETCH_OBJ);
-        $obj = $sel->fetch();
-        return $obj;
+
+    /**
+     * return data from checkExist function
+     * @return [type] [description]
+     */
+    public function getData() {
+        return $this->data_exist;
     }
+
     /**
      * search data
      * @param  string $table table name
@@ -254,13 +236,13 @@ class Database
             $keys   = $key . " LIKE ?";
             $mark[] = $keys;
         }
-        $jum = count($where);
-        if ($jum > 1) {
+        $count = count($where);
+        if ($count > 1) {
             $im  = implode(' OR  ', $mark);
-            $sel = $this->pdo->prepare("SELECT $colum from $table WHERE $im");
+            $sel = $this->pdo->prepare("SELECT * from $table WHERE $im");
         } else {
             $im  = implode('', $mark);
-            $sel = $this->pdo->prepare("SELECT $colum from $table WHERE $im");
+            $sel = $this->pdo->prepare("SELECT * from $table WHERE $im");
         }
         
         $sel->execute($value);
@@ -298,8 +280,30 @@ class Database
             return false;
         }
     }
+
+    /**
+     * insert multiple row at once
+     * @param  [type] $table      table name
+     * @param  [type] $array_data multi array 
+     * @return [type]             boolen 
+     */
+    public function insertMulti($table_name,$values) {
+        $column_name = array_keys($values[0]);
+        $column_name = implode(',',$column_name);
     
-    public function last_insert_id()
+        $value_data = array();
+        foreach ($values as $data => $val) {
+        
+        $value_data[] = '("'.implode('","',array_values($val)).'")';
+        }
+        $string_value = implode(",",$value_data);
+    
+        $sql = "INSERT INTO $table_name ($column_name) VALUES ".$string_value;
+        $this->query($sql);
+    }
+
+
+    public function getLastInsertId()
     {
         return $this->pdo->lastInsertId();
     }

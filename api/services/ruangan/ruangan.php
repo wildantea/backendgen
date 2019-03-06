@@ -122,7 +122,7 @@
 	 			$in = $db->insert('data_ruangan',$data);
 
 	 			if ($in==true) {
-	 			$id = $db->last_insert_id();
+	 			$id = $db->getLastInsertId();
 	 			$response['status']['code'] = 201;
                 $response['status']["message"] = "ruangan created successfully";
                 $response['status']["id"] = $id;

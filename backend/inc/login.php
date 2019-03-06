@@ -13,10 +13,8 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQ
         );
     $check = $db->checkExist('sys_users', $data);
     if ($check==true) {
-        $dt=$db->fetchSingleRow('sys_users', 'username', $_POST['username']);
-        $group_dt=$db->fetchSingleRow('sys_group_users', 'level', $dt->group_level);
-        $_SESSION['group_level']=$group_dt->level;
-        $_SESSION['id_user']=$dt->id;
+        $_SESSION['group_level']= $check->getData()->group_level;
+        $_SESSION['id_user']= $check->getData()->id;
         $_SESSION['login']=1;
         $status['status'] = "good";
     } else {

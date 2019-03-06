@@ -111,7 +111,7 @@ switch ($_GET['act']) {
 		$db->query("insert into sys_menu ('.$menu_column.') values('.$menu_val.')");';
 
 		$string .= '
-		$last_id = $db->last_insert_id();
+		$last_id = $db->getLastInsertId();
 		';
 
 		if ($dt->parent!=0) {

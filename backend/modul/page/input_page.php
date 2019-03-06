@@ -23,7 +23,7 @@ if ($_POST['type_menu']=='separator') {
       'type_menu'=> 'separator'
       );
     $db->insert('sys_menu',$data);
-    $last_id= $db->last_insert_id();
+    $last_id= $db->getLastInsertId();
 
   foreach ($db->fetchAll('sys_group_users') as $group) {
     if ($group->level=='root') {
@@ -59,7 +59,7 @@ if ($_POST['type_menu']=='separator') {
     );
   $db->insert('sys_menu',$data);
 
-    $last_id= $db->last_insert_id();
+    $last_id= $db->getLastInsertId();
 
   foreach ($db->fetchAll('sys_group_users') as $group) {
     if ($group->level=='root') {
@@ -988,7 +988,7 @@ $checkbox_edit= '
 
         $for_action_checkbox_normal .= '
 
-                $last_id = $db->last_insert_id();
+                $last_id = $db->getLastInsertId();
 
                 foreach ($_POST["'.$key.'"] as $'.$key.') {
                     $db->insert("'.$foreign_table_checkbox.'",array("'.$main_foreign_key_normal.'" => $last_id, "'.$foreign_key_from_normal.'" => $'.$key.'));
@@ -2123,7 +2123,7 @@ switch ($_GET["act"]) {
   case "in"://add new album & upload foto
   $data = array("'.$_POST['album_name'].'"=>$_POST["'.$_POST['album_name'].'"],"'.$_POST['deskripsi_album'].'"=>$_POST["'.$_POST['deskripsi_album'].'"]);
     $in = $db->insert("'.$_POST['album_table'].'",$data);
-  $id_akhir=$db->last_insert_id();
+  $id_akhir=$db->getLastInsertId();
   if (!is_dir("../../../upload/foto_'.$_POST['album_table'].'")) {
   mkdir("../../../upload/foto_'.$_POST['album_table'].'");
   }
@@ -2865,7 +2865,7 @@ $data = array(
   );
     $db->insert('sys_menu',$data);
 
-    $last_id= $db->last_insert_id();
+    $last_id= $db->getLastInsertId();
 
   foreach ($db->fetchAll('sys_group_users') as $group) {
 

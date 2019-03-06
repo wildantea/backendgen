@@ -574,7 +574,7 @@ $data = array(
 	);
 $db->insert('sys_services',$data);
 
-$id_service = $db->last_insert_id();
+$id_service = $db->getLastInsertId();
 
 $get_all_user = $db->fetchAll('sys_users');
 $object_read = array();

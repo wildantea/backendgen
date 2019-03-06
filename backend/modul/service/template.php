@@ -97,7 +97,7 @@ $service_template = '<?php
 	 			$in = $db->insert(\''.$main_table.'\',$data);
 
 	 			if ($in==true) {
-	 			$id = $db->last_insert_id();
+	 			$id = $db->getLastInsertId();
 	 			$response[\'status\'][\'code\'] = 201;
                 $response[\'status\']["message"] = "'.$service_name.' created successfully";
                 $response[\'status\']["id"] = $id;
