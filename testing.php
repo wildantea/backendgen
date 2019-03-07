@@ -61,7 +61,7 @@ exit();*/
  	return preg_replace( '/[^[:print:]]/', '',filter_var($value, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW|FILTER_FLAG_STRIP_HIGH));
  }
 
-$Reader = new SimpleXLSX("krs.xlsx");
+/*$Reader = new SimpleXLSX("krs.xlsx");
   foreach( $Reader->rows() as $key => $val ) {
     if ($key>0) {
       	if ($val[0]!='') {
@@ -81,6 +81,31 @@ $Reader = new SimpleXLSX("krs.xlsx");
 
 
 $db->insertMulti('krs',$data_array);
+
+*/
+
+/*$datas = $db->fetchCustomSingle("select * from jurusan where nama_jurusan=?",array(
+'nama_jurusan' => 'Indonesia')
+);
+
+if ($datas) {
+  print_r($datas);
+} else {
+  var_dump($datas);
+}*/
+
+$error = array();
+$data = array('satu','dua','tiga','lima');
+foreach ($data as $dt) {
+  if ($dt!='lima') {
+    $error[] = "error $dt";
+    return;
+  } 
+      echo $dt;
+  
+}
+print_r($error);
+
 $time_end = microtime(true);
 $execution_time = ($time_end - $time_start);
 echo waktu_import($execution_time);
