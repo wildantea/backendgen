@@ -1,6 +1,6 @@
 <?php
 switch (uri_segment(1)) {
-    case "tambah":
+    case "create":
       include "user_managements_add.php";
     break;
   case "edit":

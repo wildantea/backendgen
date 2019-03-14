@@ -26,7 +26,7 @@
            
                             <div class="box">
                                 <div class="box-header">
-                                  <a href="<?=base_index();?>excel/tambah" class="btn btn-primary btn-flat"><i class="fa fa-plus"></i> <?=$lang['add_button'];?></a>
+                                  <a href="<?=base_index();?>excel/create" class="btn btn-primary btn-flat"><i class="fa fa-plus"></i> <?=$lang['add_button'];?></a>
                                       <a href="<?=base_index();?>page-service/import" class="btn btn-primary btn-flat"><i class="fa fa-cloud-upload"></i> Import Page</a>
                                 </div><!-- /.box-header -->
                                 <div class="box-body table-responsive">

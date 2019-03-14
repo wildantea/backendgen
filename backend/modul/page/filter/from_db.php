@@ -1,5 +1,5 @@
 <?php
-include "../../../inc/config.php";
+include "../../inc/config.php";
 $table = $db->query("show table status");
 ?>
 

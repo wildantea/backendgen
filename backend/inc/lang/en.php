@@ -16,7 +16,9 @@ $lang = array(
             'intro' => 'Enter intro text',
             'action' => 'Action',
             'cancel_button' => 'Cancel',
-
+            //notif
+            'data_created' => 'Data successfully saved',
+            'date_updated' => 'Data successfully updated',
 
             //system
             'info' => 'Information',

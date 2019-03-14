@@ -87,7 +87,7 @@
       <div class="alert alert-success" style="margin-left:0">
         <button class="close" data-dismiss="alert">×</button>
         <center>
-        <strong>Data Berhasil di Tambahkan</strong>
+        <strong><?php echo $lang['data_created'];?></strong>
         </center>
       </div>
     </div>
@@ -95,7 +95,7 @@
       <div class="alert alert-success" style="margin-left:0">
         <button class="close" data-dismiss="alert">×</button>
         <center>
-        <strong>Data Berhasil di Perbaharui</strong>
+        <strong><?php echo $lang['date_updated'];?></strong>
         </center>
       </div>
     </div>

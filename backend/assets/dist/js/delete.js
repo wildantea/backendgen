@@ -12,13 +12,24 @@ $(function(){
     dtb_var = currentBtn.attr('data-variable');
 
 
-    $('#ucing')
+    $('#modal-confirm-delete')
         .modal({ keyboard: false })
         .one('click', '#delete', function (e) {
 
         $.ajax({
           type: "POST",
           dataType: 'json',
+          error: function(data ) { 
+              $('#loadnya').hide();
+              console.log(data); 
+              $('.selected-data').html('');
+              $('#bulk_delete').hide();
+             $('.isi_warning_delete').html(data.responseText);
+             $('.error_data_delete').fadeIn();
+             $('html, body').animate({
+                scrollTop: ($('.error_data_delete').first().offset().top)
+            },500);
+          },
           url: uri+"?act=delete",
           data : {id:id},
              success: function(responseText) {
@@ -35,20 +46,16 @@ $(function(){
                                 scrollTop: ($('.error_data_delete').first().offset().top)
                             },500);
                           } else if(responseText[index].status=='good') {
+                            $('.selected-data').html('');
+                            $('#bulk_delete').hide();
                             $('.error_data_delete').hide();
                             $("#line_"+id).fadeOut("slow");
                              window[dtb_var].draw(false);
-                          } else {
-                             $('.isi_warning_delete').text(responseText[index].error_message);
-                             $('.error_data_delete').fadeIn();
-                             $('html, body').animate({
-                                scrollTop: ($('.error_data_delete').first().offset().top)
-                            },500);
                           }
                     });
                 }
           });
-          $('#ucing').modal('hide');
+          $('#modal-confirm-delete').modal('hide');
 
         });
   });
@@ -66,7 +73,7 @@ $(function(){
     dtb = currentBtn.attr('data-dtb');
 
 
-    $('#ucing')
+    $('#modal-confirm-delete')
         .modal({ keyboard: false })
         .one('click', '#delete', function (e) {
 
@@ -79,7 +86,7 @@ $(function(){
               DtableManual.row('.deleted').remove().draw( false );
 			    }
 			    });
-          $('#ucing').modal('hide');
+          $('#modal-confirm-delete').modal('hide');
 
         });
 
@@ -99,7 +106,7 @@ $(function(){
     dtb = currentBtn.attr('data-dtb');
 
 
-    $('#ucing')
+    $('#modal-confirm-delete')
         .modal({ keyboard: false })
         .one('click', '#delete', function (e) {
 
@@ -113,7 +120,7 @@ $(function(){
 
           }
           });
-          $('#ucing').modal('hide');
+          $('#modal-confirm-delete').modal('hide');
 
         });
 
@@ -135,7 +142,7 @@ $(function(){
     dtb = currentBtn.attr('data-dtb');
 
 
-    $('#ucing')
+    $('#modal-confirm-delete')
         .modal({ keyboard: false })
         .one('click', '#delete', function (e) {
 
@@ -149,7 +156,7 @@ $(function(){
              dataTable.draw(false);
           }
           });
-          $('#ucing').modal('hide');
+          $('#modal-confirm-delete').modal('hide');
 
         });
   });
@@ -163,7 +170,7 @@ $('body').on('click', '.hapus_foto', function(event) {
     uri = currentBtn.attr('data-uri');
     id = currentBtn.attr('data-id');
 
-    $('#ucing')
+    $('#modal-confirm-delete')
         .modal({ keyboard: false })
         .one('click', '#delete', function (e) {
 
@@ -177,7 +184,7 @@ $('body').on('click', '.hapus_foto', function(event) {
               $("#foto_"+id).remove();
           }
           });
-          $('#ucing').modal('hide');
+          $('#modal-confirm-delete').modal('hide');
           //location.reload();
         });
 
@@ -194,7 +201,7 @@ $('body').on('click', '.hapus_album', function(event) {
     gallery_uri = currentBtn.attr('data-gallery');
     id = currentBtn.attr('data-id');
 
-    $('#ucing')
+    $('#modal-confirm-delete')
         .modal({ keyboard: false })
         .one('click', '#delete', function (e) {
 
@@ -205,7 +212,7 @@ $('body').on('click', '.hapus_album', function(event) {
             console.log(data);
           }
           });
-          $('#ucing').modal('hide');
+          $('#modal-confirm-delete').modal('hide');
          window.location=gallery_uri;
         });
 

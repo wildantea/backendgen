@@ -1,13 +1,12 @@
-
-                <!-- Content Header (Page header) -->
+<!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        Manage Menu
+                        Data Web Service
                     </h1>
-                       <ol class="breadcrumb">
+                        <ol class="breadcrumb">
                         <li><a href="<?=base_index();?>"><i class="fa fa-dashboard"></i> Home</a></li>
-                        <li><a href="<?=base_index();?>menu">Menu</a></li>
-                        <li class="active">Menu List</li>
+                        <li><a href="<?=base_index();?>data-service">Data Service</a></li>
+                        <li class="active">Data Service List</li>
                     </ol>
                 </section>
 
@@ -15,207 +14,126 @@
                 <section class="content">
                     <div class="row">
                         <div class="col-xs-12">
-                           <!-- Custom Tabs -->
-              <div class="nav-tabs-custom">
-                <ul class="nav nav-tabs">
-                  <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Service Name</a></li>
-                  <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">User Permission</a></li>
-                </ul>
-                <div class="tab-content">
-                  <div class="tab-pane active" id="tab_1">
-           
                             <div class="box">
                                 <div class="box-header">
-                                  <a href="<?=base_index();?>service/tambah" class="btn btn-primary btn-flat"><i class="fa fa-plus"></i> <?=$lang['add_button'];?></a>
-                                      <a href="<?=base_index();?>service/import" class="btn btn-primary btn-flat"><i class="fa fa-cloud-upload"></i> Import Page</a>
-                                </div><!-- /.box-header -->
-                                <div class="box-body table-responsive">
-                                    <table id="dtb_manual" class="table table-bordered table-striped">
-                                   <thead>
-                                     <tr>
-                          <th>Name</th>
-                          <th>URL</th>
-                          <th>Doc</th>
-                         
-                          <th><?=$lang['action'];?></th>
-
-                        </tr>
-                                      </thead>
-                                        <tbody>
-                                         <?php
-      $dtb=$db->query("select * from sys_services ");
-
-      foreach ($dtb as $isi) {
-        ?><tr id="line_<?=$isi->id;?>">
-<td><?=$isi->page_name;?></td>
-<td><a target='_blank' href='<?=base_url()."api/".$isi->url;?>'><?=base_url()."api/".$isi->url;?></a>
-</td>
-<td><a target='_blank'  href='<?=base_url()."api/".$isi->url;?>/doc'><?=base_url()."api/".$isi->url;?>/doc</a>
-</td>
-
-        <td>
-
-       <a href="<?=base_index();?>page/edit/<?=$isi->id;?>" class="btn btn-primary btn-flat"><i class="fa fa-pencil"></i></a>
-      <button class="btn btn-danger hapus btn-flat" data-uri="<?=base_admin();?>modul/service/service_action.php" data-id="<?=$isi->id;?>"><i class="fa fa-trash-o"></i></button>
-    <a href="<?=base_admin();?>modul/page/page_action.php?act=back&page=<?=$isi->nav_act;?>" class="btn btn-success btn-flat"><i class="fa fa-download"></i></a>
-
-        </td>
-        </tr>
-        <?php
-
-      }
-      ?>
-                                        </tbody>
-                                    </table>
-                                </div><!-- /.box-body -->
-                            </div><!-- /.box -->
-                  </div><!-- /.tab-pane -->
-                  <div class="tab-pane" id="tab_2">
-                     <div class="box">
-                                <div class="box-header">
-                                  <h3 class="box-title">&nbsp;</h3>
-                                </div><!-- /.box-header -->
-
-<form method="get" class="form-horizontal" action="">
-                      <div class="form-group">
-                        <label for="Menu" class="control-label col-lg-2">Group Users</label>
-                        <div class="col-lg-4">
-                            <select name="user" id="id_po_select" data-placeholder="Pilih User" class="form-control chzn-select" tabindex="2">
-                        <option value="">Choose Group User</option>
-                          <?php 
-
-foreach ($db->query("select sys_group_users.id, sys_group_users.level_name from sys_users inner join sys_group_users 
-on sys_users.group_level=sys_group_users.level
-group by sys_group_users.id") as $isi) {
-
-                  if (intval($_GET['user'])==$isi->id) {
-                     echo "<option value='$isi->id' selected>$isi->level_name</option>";
-                  } else {
-                     echo "<option value='$isi->id'>$isi->level_name</option>";
-                  }
-                 
-               } ?>
-
-                  
-                  </select>
-                        </div>
-                      </div><!-- /.form-group -->
-
- <label for="Menu" class="control-label col-lg-2">&nbsp;</label>
-                        <div class="col-lg-10">
-<button style="margin-top:10px;margin-bottom:10px" class="btn btn-primary">Show Menu</button>
-</div>
-</form>
-
-                                <div class="box-body table-responsive">
-          
-<?php if (isset($_GET['user'])) {
-  
-?>       
-<h3>Check The Checkbox To Give Permission</h3>
-<table id="dtb" class="table table-bordered table-condensed table-hover table-striped">
-                      <thead>
-                        <tr>
-                        <th style="width:20px">No</th>
-                          <th>Menu </th>
-                          <th>Group User</th>
-                          <th>Read</th>
-                           <th>Input</th>
-                            <th>Edit</th>
-                             <th>Delete</th>
-                         
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <?php 
-      $dtb=$db->query("select sys_menu.type_menu,sys_menu_role.read_act,sys_menu_role.insert_act,sys_menu_role.update_act,sys_menu_role.delete_act, sys_menu.page_name,sys_menu.urutan_menu,sys_group_users.level_name,sys_menu_role.id from sys_menu_role inner join sys_menu on sys_menu_role.id_menu=sys_menu.id inner join sys_group_users on sys_menu_role.group_level=sys_group_users.level where sys_group_users.id=? order by urutan_menu asc",array('sys_group_users.id'=>$_GET
-        ['user']));
-      $i=1;
-      foreach ($dtb as $isi) {
-        ?><tr id="line_<?=$isi->id;?>">
-        <td>
-        <?=$i;?></td>
-        <td><?=$isi->page_name;?></td>
-        <td><?=$isi->level_name;?></td>
-        <?php
-        if($isi->type_menu=='main')
-        {
-            ?>
-            <td>
-              <div class="checkbox">
-              <div class="checkbox checkbox-primary">
-                        <input class="styled styled-primary" type="checkbox" value="option1" onclick="read_act(<?=$isi->id;?>,this)" <?=($isi->read_act=='Y')?'checked=""':'';?>>
-                        <label for="checkbox2">
-                            &nbsp;
-                        </label>
-                    </div>
-                          </div>
-            </td>
-            <td colspan="3">Main Menu</td>
-<?php
-        } else {
-
-
-
+                                  <a href="<?=base_index();?>service/create" class="btn btn-primary btn-flat"><i class="fa fa-plus"></i> <?=$lang['add_button'];?></a>
+                            </div><!-- /.box-header -->
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-sm-12" style="margin-bottom: 10px">
+                                   <button id="bulk_delete" style="display: none;" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> <?php echo $lang["delete_selected"];?></button> <span class="selected-data"></span>
+                            </div>
+                            </div>
+ <div class="alert alert-warning fade in error_data_delete" style="display:none">
+          <button type="button" class="close hide_alert_notif">&times;</button>
+          <i class="icon fa fa-warning"></i> <span class="isi_warning_delete"></span>
+        </div>
+                        <table id="dtb_data_service" class="table table-bordered table-striped display responsive nowrap" width="100%">
+                            <thead>
+                                <tr>
+                                  <th rowspan="2">Name</th>
+                                  <th rowspan="2">URL</th>
+                                  <th rowspan="2">URL Doc</th>
+                                  <th colspan="4" class="dt-center">Enable Token</th>
+                                  <th rowspan="2">Format</th>
+                                  <th rowspan="2">Action</th>
+                                </tr>
+                                <tr>
+                                  <th>Read</th>
+                                  <th>Create</th>
+                                  <th>Update</th>
+                                  <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div><!-- /.box-body -->
+                  </div><!-- /.box -->
+                </div>
+              </div>
+ <?php
+  $edit ="";
+  $del="";
+ if ($db->userCan("update")) {
+    $edit = "<a data-id='+data+'  class=\"btn btn-primary btn-sm edit_data \" data-toggle=\"tooltip\" title=\"Edit\"><i class=\"fa fa-pencil\"></i></a>";
+      
+ }
+  if ($db->userCan("delete")) {
+    
+    $del = "<button data-id='+data+' data-uri=".base_admin()."modul/service/service_action.php".' class="btn btn-danger hapus_dtb_notif btn-sm" data-toggle="tooltip" title="Delete" data-variable="dtb_data_service"><i class="fa fa-trash"></i></button>';
+    
+ }
         ?>
-        <td>
-        <div class="checkbox">
-          <div class="checkbox checkbox-primary">
-                        <input class="styled styled-primary" type="checkbox" value="option1" onclick="read_act(<?=$isi->id;?>,this)" <?=($isi->read_act=='Y')?'checked=""':'';?>>
-                        <label for="checkbox2">
-                            &nbsp;
-                        </label>
-                    </div>
-                          </div>
-        </td>
-          <td>
-          <div class="checkbox">
-           <div class="checkbox checkbox-primary">
-                        <input class="styled styled-primary" type="checkbox" value="option1" onclick="insert_act(<?=$isi->id;?>,this)" <?=($isi->insert_act=='Y')?'checked=""':'';?>>
-                        <label for="checkbox2">
-                            &nbsp;
-                        </label>
-                    </div>
-                          </div>
-      </td>
-            <td>   <div class="checkbox">
-            <div class="checkbox checkbox-primary">
-                          <input class="styled styled-primary" type="checkbox" value="option1" onclick="update_act(<?=$isi->id;?>,this)" <?=($isi->update_act=='Y')?'checked=""':'';?>>
-                        <label for="checkbox2">
-                            &nbsp;
-                        </label>
-                    </div>
-                          </div></td>
-              <td>   <div class="checkbox">
-              <div class="checkbox checkbox-primary">
-                         <input class="styled styled-primary" type="checkbox" value="option1" onclick="delete_act(<?=$isi->id;?>,this)" <?=($isi->delete_act=='Y')?'checked=""':'';?>>
-                        <label for="checkbox2">
-                            &nbsp;
-                        </label>
-                    </div>
-                          </div></td>
-                          <?php 
-                          }
-                          ?>
-        </tr>
-        <?php
-        $i++;
-      }
-      ?>
-                   </tbody>
-                    </table>
-<?php 
 
-}  
+    <div class="modal" id="modal_data_service" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"> <div class="modal-dialog modal-lg"> <div class="modal-content"><div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button> <h4 class="modal-title"><?php echo $lang["add_button"];?> Data Service</h4> </div> <div class="modal-body" id="isi_data_service"> </div> </div><!-- /.modal-content --> </div><!-- /.modal-dialog --> </div>
+    
+    </section><!-- /.content -->
 
-?>
+        <script type="text/javascript">
+      
+      $("#add_data_service").click(function() {
+          $.ajax({
+              url : "<?=base_admin();?>modul/data_service/data_service_add.php",
+              type : "GET",
+              success: function(data) {
+                  $("#isi_data_service").html(data);
+              }
+          });
 
-                                </div><!-- /.box-body -->
-                  </div><!-- /.tab-pane -->
-                </div><!-- /.tab-content -->
-              </div><!-- nav-tabs-custom -->
+      $('#modal_data_service').modal({ keyboard: false,backdrop:'static',show:true });
 
-                        </div>
-                    </div>
+    });
+    
+      
+    $(".table").on('click','.edit_data',function(event) {
+        $("#loadnya").show();
+        event.preventDefault();
+        var currentBtn = $(this);
+        $(".modal-title").html("Edit Data Service");
+        id = currentBtn.attr('data-id');
 
-                </section><!-- /.content -->
+        $.ajax({
+            url : "<?=base_admin();?>modul/service/service_edit.php",
+            type : "post",
+            data : {id_data:id},
+            success: function(data) {
+                $("#isi_data_service").html(data);
+                $("#loadnya").hide();
+          }
+        });
+
+    $('#modal_data_service').modal({ keyboard: false,backdrop:'static' });
+
+    });
+    
+      var dtb_data_service = $("#dtb_data_service").DataTable({
+              
+           'bProcessing': true,
+            'bServerSide': true,
+            
+         //disable order dan searching pada tombol aksi use "className":"none" for always responsive hide column
+                 "columnDefs": [ 
+              
+            {
+            "targets": [8],
+              "orderable": false,
+              "searchable": false,
+              "className": "all",
+              "render": function(data, type, full, meta){
+                return '<?=$edit;?> <?=$del;?>';
+               }
+            },
+            ],
+      
+            'ajax':{
+              url :'<?=base_admin();?>modul/service/service_data.php',
+            type: 'post',  // method  , by default get
+            error: function (xhr, error, thrown) {
+            console.log(xhr);
+
+            }
+          },
+        });
+</script>
+            

@@ -24,8 +24,8 @@ if ($check_email) {
     action_response('Email Already Exist');
   }  
 
-  if (!is_dir("../../../../upload/back_profil_foto")) {
-              mkdir("../../../../upload/back_profil_foto");
+  if (!is_dir("../../../upload/back_profil_foto")) {
+              mkdir("../../../upload/back_profil_foto");
             }
   
   $data = array(
@@ -49,12 +49,12 @@ $ex = explode(".", $filename); // split filename
 $fileExt = end($ex); // ekstensi akhir
 $filename = time().rand().".".$fileExt;//rename nama file';
 $filename_thumb = 'thumb_'.$filename;//rename nama file';
-$db->compressImage($_FILES["foto_user"]["type"],$_FILES["foto_user"]["tmp_name"],"../../../../upload/back_profil_foto/",$filename,200);
+$db->compressImage($_FILES["foto_user"]["type"],$_FILES["foto_user"]["tmp_name"],"../../../upload/back_profil_foto/",$filename,200);
 $size = getimagesize ($_FILES["foto_user"]["tmp_name"]);
 if ($size[0]>512) {
-  $db->compressImage($_FILES["foto_user"]["type"],$_FILES["foto_user"]["tmp_name"],"../../../../upload/back_profil_foto/",$filename_thumb,512);
+  $db->compressImage($_FILES["foto_user"]["type"],$_FILES["foto_user"]["tmp_name"],"../../../upload/back_profil_foto/",$filename_thumb,512);
 } else {
-  copy($_FILES["foto_user"]["tmp_name"], "../../../../upload/back_profil_foto/".$filename_thumb);
+  copy($_FILES["foto_user"]["tmp_name"], "../../../upload/back_profil_foto/".$filename_thumb);
 }
               $foto_user = array("foto_user"=>$filename);
               $data = array_merge($data,$foto_user);
@@ -75,8 +75,8 @@ if ($size[0]>512) {
     break;
   case "delete":
     
-    $db->deleteDirectory("../../../../upload/back_profil_foto/".$db->fetchSingleRow("sys_users","id",$_GET["id"])->foto_user);
-$db->deleteDirectory("../../../../upload/back_profil_foto/thumb_".$db->fetchSingleRow("sys_users","id",$_GET["id"])->foto_user);
+    $db->deleteDirectory("../../../upload/back_profil_foto/".$db->fetchSingleRow("sys_users","id",$_GET["id"])->foto_user);
+$db->deleteDirectory("../../../upload/back_profil_foto/thumb_".$db->fetchSingleRow("sys_users","id",$_GET["id"])->foto_user);
 
       $db->delete("sys_users","id",$_GET["id"]);
     action_response($db->getErrorMessage());
@@ -114,15 +114,15 @@ $ex = explode(".", $filename); // split filename
 $fileExt = end($ex); // ekstensi akhir
 $filename = time().rand().".".$fileExt;//rename nama file';
 $filename_thumb = 'thumb_'.$filename;//rename nama file';
-$db->compressImage($_FILES["foto_user"]["type"],$_FILES["foto_user"]["tmp_name"],"../../../../upload/back_profil_foto/",$filename,200);
+$db->compressImage($_FILES["foto_user"]["type"],$_FILES["foto_user"]["tmp_name"],"../../../upload/back_profil_foto/",$filename,200);
 $size = getimagesize ($_FILES["foto_user"]["tmp_name"]);
 if ($size[0]>512) {
-  $db->compressImage($_FILES["foto_user"]["type"],$_FILES["foto_user"]["tmp_name"],"../../../../upload/back_profil_foto/",$filename_thumb,512);
+  $db->compressImage($_FILES["foto_user"]["type"],$_FILES["foto_user"]["tmp_name"],"../../../upload/back_profil_foto/",$filename_thumb,512);
 } else {
-  copy($_FILES["foto_user"]["tmp_name"], "../../../../upload/back_profil_foto/".$filename_thumb);
+  copy($_FILES["foto_user"]["tmp_name"], "../../../upload/back_profil_foto/".$filename_thumb);
 }
-$db->deleteDirectory("../../../../upload/back_profil_foto/".$db->fetchSingleRow("sys_users","id",$_POST["id"])->foto_user);
-$db->deleteDirectory("../../../../upload/back_profil_foto/thumb_".$db->fetchSingleRow("sys_users","id",$_POST["id"])->foto_user);
+$db->deleteDirectory("../../../upload/back_profil_foto/".$db->fetchSingleRow("sys_users","id",$_POST["id"])->foto_user);
+$db->deleteDirectory("../../../upload/back_profil_foto/thumb_".$db->fetchSingleRow("sys_users","id",$_POST["id"])->foto_user);
               $foto_user = array("foto_user"=>$filename);
               $data = array_merge($data,$foto_user);
             }

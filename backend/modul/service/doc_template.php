@@ -8,16 +8,16 @@ $doc_template = '
     <title>'.ucwords($service_name).' Rest API Documentation</title>
     <meta content=\'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no\' name=\'viewport\'>
     <!-- Bootstrap 3.3.2 -->
-    <link href="../../admina/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-     <link href="../../admina/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?=base_admin();?>assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+     <link href="<?=base_admin();?>assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <!-- Ionicons -->
-    <link href="../../admina/assets/plugins/ionic/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?=base_admin();?>assets/plugins/ionic/css/ionicons.min.css" rel="stylesheet" type="text/css" />
 
-     <link href="../../admina/assets/plugins/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" />
+     <link href="<?=base_admin();?>assets/plugins/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" />
 
     <!-- Theme style -->
-    <link href="../../admina/assets/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
-    <link href="../../admina/assets/dist/css/skins/skin-blue.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?=base_admin();?>assets/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?=base_admin();?>assets/dist/css/skins/skin-blue.min.css" rel="stylesheet" type="text/css" />
  <style type="text/css">
   .content-wrapper p{padding:0 10px;font-size:16px}#components>h3{font-size:25px;color:#000}#components>h4{font-size:20px;color:#000}ul{margin-bottom:20px}.page-header{margin:20px 0;position:relative;z-index:1;font-size:30px}.page-header a,.page-header span{z-index:5;display:block;background-color:#ecf0f5;color:#000}.page-header a::before,.page-header span::before{content:\'#\';font-size:25px;margin-right:10px;color:#3c8dbc}#components>h3:before,.page-header:before{display:block;content:" ";margin-top:-60px;height:60px;visibility:hidden}.lead{font-size:18px;font-weight:400}.eg{position:absolute;top:0;left:0;display:inline-block;background:#d2d6de;padding:5px;border-bottom-right-radius:3px;border-top-left-radius:3px;border-bottom:1px solid #d2d6dc;border-right:1px solid #d2d6dc}.eg+*{margin-top:30px}.content{padding:10px 25px}.hierarchy{background:#333;color:#fff}.plugins-list li{width:50%;float:left}pre{border:none}.sidebar{margin-top:0;padding-top:0!important}.box .main-header{z-index:1000;position:relative}.treeview .nav li a:active,.treeview .nav li a:hover{background:0 0}p{padding:0!important}.pln{color:#111}@media screen{.kwd,.str{color:#739200}.com{color:#999}.typ{color:#f05}.lit{color:#538192}.clo,.opn,.pun,.tag{color:#111}.atn{color:#739200}.atv{color:#f05}.dec,.var{color:#111}.fun{color:#538192}}@media print,projection{.kwd,.tag,.typ{font-weight:700}.str{color:#060}.kwd{color:#006}.com{color:#600;font-style:italic}.typ{color:#404}.lit{color:#044}.clo,.opn,.pun{color:#440}.tag{color:#006}.atn{color:#404}.atv{color:#060}}ol.linenums{margin-top:0;margin-bottom:0}
   .table {
@@ -478,16 +478,16 @@ If data successfully posted, below is the response status
     </div><!-- ./wrapper -->
 
     <!-- jQuery 2.1.3 -->
-    <script src="../../admina/assets/plugins/jQuery/jQuery-2.1.3.min.js"></script>
+    <script src="<?=base_admin();?>assets/plugins/jQuery/jQuery-2.1.3.min.js"></script>
     <!-- Bootstrap 3.3.2 JS -->
-    <script src="../../admina/assets/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="<?=base_admin();?>assets/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
     <!-- FastClick -->
-    <script src=\'../../admina/assets/plugins/fastclick/fastclick.min.js\'></script>
+    <script src=\'<?=base_admin();?>assets/plugins/fastclick/fastclick.min.js\'></script>
     <!-- AdminLTE App -->
-    <script src="../../admina/assets/dist/js/app.min.js" type="text/javascript"></script>
+    <script src="<?=base_admin();?>assets/dist/js/app.min.js" type="text/javascript"></script>
     <!-- SlimScroll 1.3.0 -->
-    <script src="../../admina/assets/plugins/slimScroll/jquery.slimscroll.min.js" type="text/javascript"></script>
-    <script src="../../admina/assets/plugins/google-code-prettify/run_prettify.js"></script>
+    <script src="<?=base_admin();?>assets/plugins/slimScroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+    <script src="<?=base_admin();?>assets/plugins/google-code-prettify/run_prettify.js"></script>
     <script>
 /*
  * Documentation specific JS script

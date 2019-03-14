@@ -584,16 +584,16 @@ $object_delete = array();
 
 foreach ($get_all_user as $user) {
     if ($user->group_level=='root') {
-      $object_read[] = '{"user_id":'.$user->id.',"access":1,"token":"'.$user->password.'"}';
-      $object_create[] = '{"user_id":'.$user->id.',"access":1,"token":"'.$user->password.'"}';
-      $object_update[] = '{"user_id":'.$user->id.',"access":1,"token":"'.$user->password.'"}';
-      $object_delete[] = '{"user_id":'.$user->id.',"access":1,"token":"'.$user->password.'"}';
+      $object_read[] = '{"user_id":'.$user->id.',"access":"1","token":"'.$user->password.'"}';
+      $object_create[] = '{"user_id":'.$user->id.',"access":"1","token":"'.$user->password.'"}';
+      $object_update[] = '{"user_id":'.$user->id.',"access":"1","token":"'.$user->password.'"}';
+      $object_delete[] = '{"user_id":'.$user->id.',"access":"1","token":"'.$user->password.'"}';
 
     } else {
-      $object_read[] = '{"user_id":'.$user->id.',"access":0,"token":"'.$user->password.'"}';
-      $object_create[] = '{"user_id":'.$user->id.',"access":0,"token":"'.$user->password.'"}';
-      $object_update[] = '{"user_id":'.$user->id.',"access":0,"token":"'.$user->password.'"}';
-      $object_delete[] = '{"user_id":'.$user->id.',"access":0,"token":"'.$user->password.'"}';
+      $object_read[] = '{"user_id":'.$user->id.',"access":"0","token":"'.$user->password.'"}';
+      $object_create[] = '{"user_id":'.$user->id.',"access":"0","token":"'.$user->password.'"}';
+      $object_update[] = '{"user_id":'.$user->id.',"access":"0","token":"'.$user->password.'"}';
+      $object_delete[] = '{"user_id":'.$user->id.',"access":"0","token":"'.$user->password.'"}';
      
     }
 }
@@ -617,7 +617,10 @@ $string_obj_delete = "[$obj_delete]";
 
 $data = array(
       'id_service' => $id_service,
-      'enable_token' => $_POST['enable_token'],
+      'enable_token_read' => $_POST['enable_token'],
+      'enable_token_create' => $_POST['enable_token'],
+      'enable_token_update' => $_POST['enable_token'],
+      'enable_token_delete' => $_POST['enable_token'],
        'format_data' => $format_data,
       'read_access' =>  $string_obj_read,
       'create_access' => $string_obj_create,

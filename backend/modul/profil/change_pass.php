@@ -24,7 +24,7 @@
           <button type="button" class="close" data-dismiss="alert">&times;</button>
           <span class="isi_warning"></span>
         </div>
-                    <form id="input_change_password" method="post" class="form-horizontal" action="<?=base_admin();?>modul/root_module/profil/change_password_action.php?act=up">
+                    <form id="input_change_password" method="post" class="form-horizontal" action="<?=base_admin();?>modul/profil/change_password_action.php?act=up">
                         <div class="form-group">
                         <label for="Password Baru" class="control-label col-lg-2"><?=$lang["current_password"];?></label>
                         <div class="col-lg-10">
@@ -124,6 +124,9 @@
                 error: function(data ) { 
                   $("#loadnya").hide();
                   console.log(data); 
+                  $(".isi_warning").html(data.responseText);
+                  $(".error_data").focus()
+                  $(".error_data").fadeIn();
                 },
                 success: function(responseText) {
                   $("#loadnya").hide();
@@ -137,16 +140,12 @@
                              $(".error_data").focus()
                              $(".error_data").fadeIn();
                           } else if(responseText[index].status=="good") {
+                            $(".save-data").attr("disabled", "disabled");
                             $(".error_data").hide();
                             $(".notif_top_up").fadeIn(1000);
                             $(".notif_top_up").fadeOut(1000, function() {
                                     window.history.back();
                             });
-                          } else {
-                             console.log(responseText);
-                             $(".isi_warning").text(responseText[index].error_message);
-                             $(".error_data").focus()
-                             $(".error_data").fadeIn();
                           }
                     });
                 }

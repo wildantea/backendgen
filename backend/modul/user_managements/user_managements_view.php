@@ -21,7 +21,7 @@
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header">
-                                 <a href="<?=base_index();?>user-managements/tambah" class="btn btn-primary "><i class="fa fa-plus"></i> <?php echo $lang["add_button"];?></a>
+                                 <a href="<?=base_index();?>user-managements/create" class="btn btn-primary "><i class="fa fa-plus"></i> <?php echo $lang["add_button"];?></a>
                             </div><!-- /.box-header -->
                             <div class="box-body">
  <div class="alert alert-warning fade in error_data_delete" style="display:none">

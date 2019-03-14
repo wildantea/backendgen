@@ -1740,7 +1740,7 @@ $checkbox_edit= '
                               <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
 
                             </div>
-                             <a href="../../../../upload/'.$modul_name.'/<?=$data_edit->'.$key.'?>"><?=$data_edit->'.$key.'?></a>
+                             <a href="../../../upload/'.$modul_name.'/<?=$data_edit->'.$key.'?>"><?=$data_edit->'.$key.'?></a>
                           </div>
                         </div>
                       </div><!-- /.form-group -->'.PHP_EOL;
@@ -2076,7 +2076,7 @@ if ($_POST['crud_style']=='modal') {
         $("#loadnya").show();
         event.preventDefault();
         var currentBtn = $(this);
-
+        $(".modal-title").html("Edit '.ucwords($_POST['page_name']).'");
         id = currentBtn.attr(\'data-id\');
 
         $.ajax({
@@ -2102,7 +2102,7 @@ if ($_POST['crud_style']=='modal') {
      $button_edit_modal_manual = "data-uri";
 } else {
     $main_modal_status = "no";
-    $button_modal = 'href="<?=base_index();?>'.str_replace("_", "-", $modul_name).'/tambah"';
+    $button_modal = 'href="<?=base_index();?>'.str_replace("_", "-", $modul_name).'/create"';
     $button_edit_modal = 'href=".base_index()."'.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/edit/\'+data+\'';
      $button_edit_modal_manual = "href";
 
@@ -2200,7 +2200,7 @@ $input_gallery_action .='$filename = $_FILES["foto_banyak"]["name"][$i];';
 $input_gallery_action .='
 move_uploaded_file($_FILES["foto_banyak"]["tmp_name"][$i], "../../../upload/foto_'.$_POST['album_table'].'/".$filename);
 $db->insert("'.$_POST['foreign_album'].'",array("'.$_POST['foreign_album_nama'].'"=>$filename,"'.$_POST['foreign_album_id'].'"=>$_POST["id"]));
-$images[] = "../../../../upload/foto_'.$_POST['album_table'].'/".$filename;
+$images[] = "../../../upload/foto_'.$_POST['album_table'].'/".$filename;
             }
   }
 ?>
@@ -2341,7 +2341,7 @@ $fotos=$pg->query("select * from '.$_POST['foreign_album'].' where '.$_POST['for
        <div class="col-lg-3 col-md-3 col-xs-6 thumb" id="foto_<?=$foto->'.$_POST['foreign_album_primary'].';?>">
         <span id="foto_list">
       <a class="fancybox" rel="gallery1" id="the_foto_<?=$foto->'.$_POST['foreign_album_primary'].';?>" href="<?=base_url();?>upload/foto_'.$_POST['album_table'].'/<?=$foto->'.$_POST['foreign_album_nama'].';?>" title="<?=$foto->'.$_POST['foreign_album_desc'].';?> ">
-      <img class="img-responsive gambar_list" src="../../../../upload/foto_'.$_POST['album_table'].'/<?=$foto->'.$_POST['foreign_album_nama'].';?>" />
+      <img class="img-responsive gambar_list" src="../../../upload/foto_'.$_POST['album_table'].'/<?=$foto->'.$_POST['foreign_album_nama'].';?>" />
     </a>
     <span data-id="<?=$foto->'.$_POST['foreign_album_primary'].';?>" data-desc="<?=$foto->'.$_POST['foreign_album_desc'].';?>" class="btn btn-default  up_foto"><i class="fa fa-pencil icon"></i></span>
 
@@ -2427,7 +2427,7 @@ $fotos=$pg->query("select * from '.$_POST['foreign_album'].' where '.$_POST['for
        <div class="col-lg-3 col-md-3 col-xs-6 thumb" id="foto_<?=$foto->'.$_POST['foreign_album_primary'].';?>">
         <span id="foto_list">
       <a class="fancybox" rel="gallery1" id="the_foto_<?=$foto->'.$_POST['foreign_album_primary'].';?>" href="<?=base_url();?>upload/foto_'.$_POST['album_table'].'/<?=$foto->'.$_POST['foreign_album_nama'].';?>" title="<?=$foto->'.$_POST['foreign_album_desc'].';?> ">
-      <img class="img-responsive" src="../../../../upload/foto_'.$_POST['album_table'].'/<?=$foto->'.$_POST['foreign_album_nama'].';?>" />
+      <img class="img-responsive" src="../../../upload/foto_'.$_POST['album_table'].'/<?=$foto->'.$_POST['foreign_album_nama'].';?>" />
     </a>
     <span data-id="<?=$foto->'.$_POST['foreign_album_primary'].';?>" data-desc="<?=$foto->'.$_POST['foreign_album_desc'].';?>" class="btn btn-default  up_foto"><i class="fa fa-pencil icon"></i></span>
 
@@ -2601,10 +2601,10 @@ $group_by = '$datatable->setGroupBy("'.$main_table.'.'.$primary_key.'");';
         <td>
           <?php
           echo \'<a href="\'.base_index().\''.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/detail/\'.$isi->'.$primary_key_only_col.'.\'" class="btn btn-success btn-sm"><i class="fa fa-eye"></i></a> \';
-          if ($db->userCan(uri_segment(0),"update_act")) {
+          if ($db->userCan("update")) {
             echo \'<a '.$button_edit_modal_manual.'="\'.base_index().\''.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/edit/\'.$isi->'.$primary_key_only_col.'.\'" data-id="\'.$isi->'.$primary_key_only_col.'.\'" class="btn edit_data btn-primary btn-sm"><i class="fa fa-pencil"></i></a> \';
           }
-          if ($db->userCan(uri_segment(0),"delete_act")) {
+          if ($db->userCan("delete")) {
             echo \'<button class="btn btn-danger btn-sm hapus"  data-uri="\'.base_admin().\'modul/'.strtolower(str_replace(" ", "_", $_POST['page_name'])).'/'.$modul_name.'_action.php" data-variable="dtb_'.$modul_name.'" data-id="\'.$isi->'.$primary_key_only_col.'.\'"><i class="fa fa-trash-o"></i></button>\';
           }
         ?>
@@ -2625,10 +2625,10 @@ $group_by = '$datatable->setGroupBy("'.$main_table.'.'.$primary_key.'");';
         <td>
             <?php
             echo \'<a href="\'.base_index().\''.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/detail/\'.$isi->'.$primary_key_only_col.'.\'" class="btn btn-success btn-sm"><i class="fa fa-eye"></i></a> \';
-            if ($db->userCan(uri_segment(0),"update_act")) {
+            if ($db->userCan("update")) {
               echo \'<a '.$button_edit_modal_manual.'="\'.base_index().\''.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/edit/\'.$isi->'.$primary_key_only_col.'.\'" data-id="\'.$isi->'.$primary_key_only_col.'.\'" class="btn edit_data btn-primary btn-sm"><i class="fa fa-pencil"></i></a> \';
             }
-            if ($db->userCan(uri_segment(0),"delete_act")) {
+            if ($db->userCan("delete")) {
               echo \'<button class="btn btn-danger btn-sm hapus " data-uri="\'.base_admin().\'modul/'.strtolower(str_replace(" ", "_", $_POST['page_name'])).'/'.$modul_name.'_action.php" data-id="\'.$isi->'.$primary_key_only_col.'.\'"><i class="fa fa-trash-o"></i></button>\';
             }
           ?>
@@ -2688,10 +2688,10 @@ $group_by = '$datatable->setGroupBy("'.$main_table.'.'.$primary_key.'");';
           <td>
           <a href="<?=base_index();?>'.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/detail/<?=$isi->'.$primary_key_only_col.';?>" class="btn btn-success btn-sm"><i class="fa fa-eye"></i></a>
           <?php
-            if ($db->userCan(uri_segment(0),"update_act")) {
+            if ($db->userCan("update")) {
               echo "<a href=\'".base_index()."'.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/edit/".$isi->'.$primary_key_only_col.'."\' data-id=\'".$isi->'.$primary_key_only_col.'."\' class=\'btn edit_data btn-primary btn-sm\'><i class=\'fa fa-pencil\'></i></a> ";
             }
-            if ($db->userCan(uri_segment(0),"delete_act")) {
+            if ($db->userCan("delete")) {
               echo "<button class=\'btn btn-danger btn-sm hapus_manual\' data-uri=\'".base_admin()."modul/'.strtolower(str_replace(" ", "_", $_POST['page_name'])).'/'.$modul_name.'_action.php\' data-id=\'".$isi->'.$primary_key_only_col.'."\'><i class=\'fa fa-trash-o\'></i></button>";
             }
             ?>
@@ -2744,10 +2744,10 @@ $group_by = '$datatable->setGroupBy("'.$main_table.'.'.$primary_key.'");';
           <td>
             <a href="<?=base_index();?>'.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/detail/<?=$isi->'.$primary_key_only_col.';?>" class="btn btn-sm btn-success "><i class="fa fa-eye"></i></a>
             <?php
-              if ($db->userCan(uri_segment(0),"update_act")) {
+              if ($db->userCan("update")) {
                 echo "<a href=\'".base_index()."'.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/edit/".$isi->'.$primary_key_only_col.'."\' data-id=\'".$isi->'.$primary_key_only_col.'."\' class=\'btn edit_data btn-primary btn-sm\'><i class=\'fa fa-pencil\'></i></a> ";
               }
-              if ($db->userCan(uri_segment(0),"delete_act")) {
+              if ($db->userCan("delete")) {
                 echo "<button class=\'btn btn-danger btn-sm hapus_manual\' data-uri=\'".base_admin()."modul/'.strtolower(str_replace(" ", "_", $_POST['page_name'])).'/'.$modul_name.'_action.php\' data-id=\'".$isi->'.$primary_key_only_col.'."\'><i class=\'fa fa-trash-o\'></i></button>";
               }
               ?>

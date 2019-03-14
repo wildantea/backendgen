@@ -62,7 +62,7 @@
                   <div class="tab-pane active" id="tab_1">
                             <div class="box">
                                 <div class="box-header">
-                                  <a href="<?=base_index();?>page/tambah" class="btn btn-primary btn-flat"><i class="fa fa-plus"></i> <?=$lang['add_button'];?></a>
+                                  <a href="<?=base_index();?>page/create" class="btn btn-primary btn-flat"><i class="fa fa-plus"></i> <?=$lang['add_button'];?></a>
                                       <a href="<?=base_index();?>page/import" class="btn btn-primary btn-flat"><i class="fa fa-cloud-upload"></i> Import Page</a>
                                 </div><!-- /.box-header -->
                                 <div class="box-body table-responsive">
@@ -258,7 +258,7 @@ echo buildMenu(uri_segment(0),0, $menu);
     dtb = currentBtn.attr('data-dtb');
 
 
-    $('#ucing')
+    $('#modal-confirm-delete')
         .modal({ keyboard: false })
         .one('click', '#delete', function (e) {
 
@@ -271,7 +271,7 @@ echo buildMenu(uri_segment(0),0, $menu);
               page_data.row('.deleted').remove().draw( false );
           }
           });
-          $('#ucing').modal('hide');
+          $('#modal-confirm-delete').modal('hide');
 
         });
 

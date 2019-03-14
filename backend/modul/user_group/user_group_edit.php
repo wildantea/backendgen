@@ -28,7 +28,7 @@ $data_edit = $db->fetchSingleRow("sys_group_users","id",$_POST['id_data']);
                 <div class="col-lg-12">
                   <div class="modal-footer"> 
                   <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close"></i> <?php echo $lang["cancel_button"];?></button>
-                  <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> <?php echo $lang["submit_button"];?></button>
+                  <button type="submit" class="btn btn-primary save-data"><i class="fa fa-save"></i> <?php echo $lang["submit_button"];?></button>
                   </div>
                 </div>
               </div><!-- /.form-group -->
@@ -111,6 +111,9 @@ $data_edit = $db->fetchSingleRow("sys_group_users","id",$_POST['id_data']);
                 error: function(data ) { 
                   $("#loadnya").hide();
                   console.log(data); 
+                  $(".isi_warning").html(data.responseText);
+                  $(".error_data").focus()
+                  $(".error_data").fadeIn();
                 },
                 success: function(responseText) {
                   $("#loadnya").hide();
@@ -124,17 +127,13 @@ $data_edit = $db->fetchSingleRow("sys_group_users","id",$_POST['id_data']);
                              $(".error_data").focus()
                              $(".error_data").fadeIn();
                           } else if(responseText[index].status=="good") {
+                            $(".save-data").attr("disabled", "disabled");
                             $('#modal_user_group').modal('hide');
                             $(".error_data").hide();
                             $(".notif_top_up").fadeIn(1000);
                             $(".notif_top_up").fadeOut(1000, function() {
                                  dtb_user_group.draw();
                             });
-                          } else {
-                             console.log(responseText);
-                             $(".isi_warning").text(responseText[index].error_message);
-                             $(".error_data").focus()
-                             $(".error_data").fadeIn();
                           }
                     });
                 }

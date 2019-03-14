@@ -71,6 +71,18 @@ function base_url()
   return $root;
 }
 
+//root url api
+function base_url_api()
+{
+  $root='';
+  $protocol = isset($_SERVER["HTTPS"]) ? 'https://' : 'http://';
+  $root = $protocol.$_SERVER['HTTP_HOST'];
+  //$root .= dirname($_SERVER['SCRIPT_NAME']);
+  $root .= "/".DIR_API."/";
+  return $root;
+}
+
+
 //base admin is url until admin dir, ex:http://localhost/backend/admina
 function base_admin()
 {

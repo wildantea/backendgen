@@ -1,5 +1,5 @@
 <?php
-include "../../../inc/config.php";
+include "../../inc/config.php";
 $table = $db->query("show columns from ".$_GET['tb']);
 $tabs = $db->query("show columns from ".$_GET['tb']);
 ?>

@@ -92,9 +92,9 @@ $list_gallery = '<!-- Content Header (Page header) -->
                       <div class="album-top">
                           <div class="col-md-2 ">
                           <?php
-                            if ($db->userCan(uri_segment(0),"insert_act")) {
+                            if ($db->userCan("insert")) {
                                 ?>
-                            <a href="<?=base_index();?>'.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/tambah" class="btn btn-primary "><i class="fa fa-plus"></i> Add Album</a>
+                            <a href="<?=base_index();?>'.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/create" class="btn btn-primary "><i class="fa fa-plus"></i> Add Album</a>
                                 <?php
                             } 
                           ?>
@@ -162,7 +162,7 @@ $list_table ='<!-- Content Header (Page header) -->
                             <div class="box">
                                 <div class="box-header">
                                 <?php
-                                if ($db->userCan(uri_segment(0),"insert_act")) {
+                                if ($db->userCan("insert")) {
                                       ?>
                                       <a '.$button_modal.' class="btn btn-primary "><i class="fa fa-plus"></i> <?php echo $lang["add_button"];?></a>
                                       <?php
@@ -196,10 +196,10 @@ $list_table ='<!-- Content Header (Page header) -->
  <?php
   $edit ="";
   $del="";
- if ($db->userCan(uri_segment(0),"update_act")) {
+ if ($db->userCan("update")) {
     '.$edit_button_view.'
  }
-  if ($db->userCan(uri_segment(0),"delete_act")) {
+  if ($db->userCan("delete")) {
     '.$delete_button_view.'
  }
         ?>
@@ -284,11 +284,20 @@ $('.bulk-check').on('click',function() { // bulk checked
     var anSelected = fnGetSelected( dtb_$modul_name );
     var data_array_id = check_selected();
     var all_ids = data_array_id.toString();
-    $('#ucing').modal({ keyboard: false }).one('click', '#delete', function (e) {
+    $('#modal-confirm-delete').modal({ keyboard: false }).one('click', '#delete', function (e) {
         $('#loadnya').show();
         $.ajax({
             type: 'POST',
             dataType: 'json',
+            error: function(data ) { 
+                $('#loadnya').hide();
+                console.log(data); 
+               $('.isi_warning_delete').html(data.responseText);
+               $('.error_data_delete').fadeIn();
+               $('html, body').animate({
+                  scrollTop: ($('.error_data_delete').first().offset().top)
+              },500);
+            },
             url: '<?=base_admin();?>modul/".strtolower(str_replace(" ", "_", $_POST['page_name']))."/".strtolower(str_replace(" ", "_", $_POST['page_name']))."_action.php?act=del_massal',
             data: {data_ids:all_ids},
                success: function(responseText) {
@@ -312,19 +321,13 @@ $('.bulk-check').on('click',function() { // bulk checked
                                $('#loadnya').hide();
                                $(anSelected).remove();
                                dtb_$modul_name.draw();
-                          } else {
-                             $('.isi_warning_delete').text(responseText[index].error_message);
-                             $('.error_data_delete').fadeIn();
-                             $('html, body').animate({
-                                scrollTop: ($('.error_data_delete').first().offset().top)
-                            },500);
                           }
                     });
                 }
             //async:false
         });
 
-        $('#ucing').modal('hide');
+        $('#modal-confirm-delete').modal('hide');
 
     });
 
@@ -353,7 +356,7 @@ $list_table_off ='<!-- Content Header (Page header) -->
       <div class="box">
         <div class="box-header">
           <?php
-        if ($db->userCan(uri_segment(0),"insert_act")) {
+        if ($db->userCan("insert")) {
               ?>
              <a '.$button_modal.' class="btn btn-primary"><i class="fa fa-plus"></i> <?php echo $lang["add_button"];?></a>
               <?php
@@ -441,14 +444,14 @@ $datatable->createData();
 $main = '<?php
 //you can catch url from this file
 switch (uri_segment(1)) {
-  case "tambah":
-        if ($db->userCan(uri_segment(0),"insert_act")) {
+  case "create":
+        if ($db->userCan("insert")) {
            include "'.$modul_name.'_add.php";
         } 
     break;
   case "edit":
    $data_edit = $db->fetchSingleRow("'.$main_table.'","'.$primary_key.'",uri_segment(2));
-        if ($db->userCan(uri_segment(0),"update_act")) {
+        if ($db->userCan("update")) {
            include "'.$modul_name.'_edit.php";
         } 
     break;
@@ -479,7 +482,7 @@ include "../../inc/config.php";
                 <div class="col-lg-12">
                   <div class="modal-footer"> 
                   <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close"></i> <?php echo $lang["cancel_button"];?></button>
-                  <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> <?php echo $lang["submit_button"];?></button>
+                  <button type="submit" class="btn btn-primary save-data"><i class="fa fa-save"></i> <?php echo $lang["submit_button"];?></button>
                   </div>
                 </div>
               </div><!-- /.form-group -->
@@ -534,6 +537,9 @@ include "../../inc/config.php";
                 error: function(data ) { 
                   $("#loadnya").hide();
                   console.log(data); 
+                  $(".isi_warning").html(data.responseText);
+                  $(".error_data").focus()
+                  $(".error_data").fadeIn();
                 },
                 success: function(responseText) {
                   $("#loadnya").hide();
@@ -547,17 +553,13 @@ include "../../inc/config.php";
                              $(".error_data").focus()
                              $(".error_data").fadeIn();
                           } else if(responseText[index].status=="good") {
+                            $(".save-data").attr("disabled", "disabled");
                             $(\'#modal_'.$modul_name.'\').modal(\'hide\');
                             $(".error_data").hide();
                             $(".notif_top").fadeIn(1000);
                             $(".notif_top").fadeOut(1000, function() {
                                 dtb_'.$modul_name.'.draw();
                             });
-                          } else {
-                             console.log(responseText);
-                             $(".isi_warning").text(responseText[index].error_message);
-                             $(".error_data").focus()
-                             $(".error_data").fadeIn();
                           }
                     });
                 }
@@ -586,7 +588,7 @@ include "../../inc/config.php";
                 <div class="col-lg-12">
                   <div class="modal-footer"> 
                   <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close"></i> <?php echo $lang["cancel_button"];?></button>
-                  <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> <?php echo $lang["submit_button"];?></button>
+                  <button type="submit" class="btn btn-primary save-data"><i class="fa fa-save"></i> <?php echo $lang["submit_button"];?></button>
                   </div>
                 </div>
               </div><!-- /.form-group -->
@@ -642,6 +644,9 @@ include "../../inc/config.php";
                 error: function(data ) { 
                   $("#loadnya").hide();
                   console.log(data); 
+                  $(".isi_warning").html(data.responseText);
+                  $(".error_data").focus()
+                  $(".error_data").fadeIn();
                 },
                 success: function(responseText) {
                   $("#loadnya").hide();
@@ -655,17 +660,13 @@ include "../../inc/config.php";
                              $(".error_data").focus()
                              $(".error_data").fadeIn();
                           } else if(responseText[index].status=="good") {
+                            $(".save-data").attr("disabled", "disabled");
                             $(\'#modal_'.$modul_name.'\').modal(\'hide\');
                             $(".error_data").hide();
                             $(".notif_top_up").fadeIn(1000);
                             $(".notif_top_up").fadeOut(1000, function() {
                                  dtb_'.$modul_name.'.draw();
                             });
-                          } else {
-                             console.log(responseText);
-                             $(".isi_warning").text(responseText[index].error_message);
-                             $(".error_data").focus()
-                             $(".error_data").fadeIn();
                           }
                     });
                 }
@@ -714,7 +715,7 @@ $modul_add = '<!-- Content Header (Page header) -->
                 <label for="tags" class="control-label col-lg-2">&nbsp;</label>
                 <div class="col-lg-10">
              <a href="<?=base_index();?>'.str_replace("_", "-", $modul_name).'" class="btn btn-default "><i class="fa fa-step-backward"></i> <?php echo $lang["cancel_button"];?></a>
-            <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> <?php echo $lang["submit_button"];?></button>
+            <button type="submit" class="btn btn-primary save-data"><i class="fa fa-save"></i> <?php echo $lang["submit_button"];?></button>
            
                 </div>
               </div><!-- /.form-group -->
@@ -774,6 +775,9 @@ $modul_add = '<!-- Content Header (Page header) -->
                 error: function(data ) { 
                   $("#loadnya").hide();
                   console.log(data); 
+                  $(".isi_warning").html(data.responseText);
+                  $(".error_data").focus()
+                  $(".error_data").fadeIn();
                 },
                 success: function(responseText) {
                   $("#loadnya").hide();
@@ -787,16 +791,12 @@ $modul_add = '<!-- Content Header (Page header) -->
                              $(".error_data").focus()
                              $(".error_data").fadeIn();
                           } else if(responseText[index].status=="good") {
+                            $(".save-data").attr("disabled", "disabled");
                             $(".error_data").hide();
                             $(".notif_top").fadeIn(1000);
                             $(".notif_top").fadeOut(1000, function() {
                                     window.history.back();
                             });
-                          } else {
-                             console.log(responseText);
-                             $(".isi_warning").text(responseText[index].error_message);
-                             $(".error_data").focus()
-                             $(".error_data").fadeIn();
                           }
                     });
                 }
@@ -846,7 +846,7 @@ $modul_edit= '<!-- Content Header (Page header) -->
                                 <label for="tags" class="control-label col-lg-2">&nbsp;</label>
                                 <div class="col-lg-10">
                                 <a href="<?=base_index();?>'.str_replace("_", "-", $modul_name).'" class="btn btn-default "><i class="fa fa-step-backward"></i> <?php echo $lang["cancel_button"];?></a>
-                                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> <?php echo $lang["submit_button"];?></button>
+                                <button type="submit" class="btn btn-primary save-data"><i class="fa fa-save"></i> <?php echo $lang["submit_button"];?></button>
                                 </div>
                             </div><!-- /.form-group -->
                           </form>
@@ -900,6 +900,9 @@ $modul_edit= '<!-- Content Header (Page header) -->
                 error: function(data ) { 
                   $("#loadnya").hide();
                   console.log(data); 
+                  $(".isi_warning").html(data.responseText);
+                  $(".error_data").focus()
+                  $(".error_data").fadeIn();
                 },
                 success: function(responseText) {
                   $("#loadnya").hide();
@@ -913,16 +916,12 @@ $modul_edit= '<!-- Content Header (Page header) -->
                              $(".error_data").focus()
                              $(".error_data").fadeIn();
                           } else if(responseText[index].status=="good") {
+                            $(".save-data").attr("disabled", "disabled");
                             $(".error_data").hide();
                             $(".notif_top_up").fadeIn(1000);
                             $(".notif_top_up").fadeOut(1000, function() {
                                     window.history.back();
                             });
-                          } else {
-                             console.log(responseText);
-                             $(".isi_warning").text(responseText[index].error_message);
-                             $(".error_data").focus()
-                             $(".error_data").fadeIn();
                           }
                     });
                 }
@@ -1064,9 +1063,9 @@ $list_gallery = '<!-- Content Header (Page header) -->
                             <div class="album-top">
                                 <div class="col-md-2 ">
                                 <?php
-                                  if ($db->userCan(uri_segment(0),"insert_act")) {
+                                  if ($db->userCan("insert")) {
                                      ?>
-                                     <a href="<?=base_index();?>'.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/tambah" class="btn btn-primary "><i class="fa fa-plus"></i> Add Album</a>
+                                     <a href="<?=base_index();?>'.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/create" class="btn btn-primary "><i class="fa fa-plus"></i> Add Album</a>
                                      <?php
                                   } 
                                       ?>
@@ -1135,7 +1134,7 @@ $list_table_manual ='<!-- Content Header (Page header) -->
                             <div class="box">
                                  <div class="box-header">
                                 <?php
-                                if ($db->userCan(uri_segment(0),"insert_act")) {
+                                if ($db->userCan("insert")) {
                                       ?>
                                      <a '.$button_modal.' class="btn btn-primary"><i class="fa fa-plus"></i> <?php echo $lang["add_button"];?></a>
                                       <?php
@@ -1189,14 +1188,14 @@ $main = '<?php
 switch (uri_segment(1)) {';
     if ($main_modal_status=='no') {
     $main.='
-    case "tambah":
-          if ($db->userCan(uri_segment(0),"insert_act")) {
+    case "create":
+          if ($db->userCan("insert")) {
              include "'.$modul_name.'_add.php";
           } 
       break;
     case "edit":
     $data_edit = $db->fetchSingleRow("'.$main_table.'","'.$primary_key.'",uri_segment(2));
-          if ($db->userCan(uri_segment(0),"update_act")) {
+          if ($db->userCan("update")) {
              include "'.$modul_name.'_edit.php";
           } 
       break;

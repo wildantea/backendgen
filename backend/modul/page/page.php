@@ -4,7 +4,7 @@ switch (uri_segment(1)) {
 	case 'import':
 		include "import.php";
 		break;
-	case 'tambah':
+	case 'create':
 		include "page_add.php";
 		break;
 	case 'edit':

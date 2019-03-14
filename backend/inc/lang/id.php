@@ -17,7 +17,9 @@ $lang = array(
             'intro' => 'Enter intro text',
             'action' => 'Action',
             'cancel_button' => 'Batal',
-
+            //notif
+            'data_created' => 'Data Berhasil di Tambahkan',
+            'date_updated' => 'Data Berhasil di Perbaharui',
 
             //system
             'info' => 'Information',

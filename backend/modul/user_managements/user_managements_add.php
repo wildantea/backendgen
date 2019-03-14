@@ -104,7 +104,7 @@
                 <label for="tags" class="control-label col-lg-2">&nbsp;</label>
                 <div class="col-lg-10">
              <a href="<?=base_index();?>user-managements" class="btn btn-default "><i class="fa fa-step-backward"></i> <?php echo $lang["cancel_button"];?></a>
-            <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> <?php echo $lang["submit_button"];?></button>
+            <button type="submit" class="btn btn-primary save-data"><i class="fa fa-save"></i> <?php echo $lang["submit_button"];?></button>
            
                 </div>
               </div><!-- /.form-group -->
@@ -261,6 +261,9 @@
                 error: function(data ) { 
                   $("#loadnya").hide();
                   console.log(data); 
+                  $(".isi_warning").html(data.responseText);
+                  $(".error_data").focus()
+                  $(".error_data").fadeIn();
                 },
                 success: function(responseText) {
                   $("#loadnya").hide();
@@ -274,16 +277,12 @@
                              $(".error_data").focus()
                              $(".error_data").fadeIn();
                           } else if(responseText[index].status=="good") {
+                            $('.save-data').attr('disabled', 'disabled');
                             $(".error_data").hide();
                             $(".notif_top").fadeIn(1000);
                             $(".notif_top").fadeOut(1000, function() {
                                     window.history.back();
                             });
-                          } else {
-                             console.log(responseText);
-                             $(".isi_warning").text(responseText[index].error_message);
-                             $(".error_data").focus()
-                             $(".error_data").fadeIn();
                           }
                     });
                 }

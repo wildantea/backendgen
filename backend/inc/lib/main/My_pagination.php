@@ -189,13 +189,8 @@ class My_pagination
 		if ($search!=null) {
 			$search = "/search/".$search;	
 		}
-		$base_uri = $_SERVER['SCRIPT_NAME'];
-		$base_uri = explode("/", $base_uri);
-		array_pop($base_uri);
-		$base_uri = implode("/", $base_uri)."/";
-		$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
 		//$url 
-		$last= $protocol.$_SERVER['SERVER_NAME'].$base_uri.$uri.$search."?".$url[1]."1".$perpage;
+		$last= base_url_api().$uri.$search."?".$url[1]."1".$perpage;
 
 		//}
 		return $last;
@@ -210,14 +205,8 @@ class My_pagination
 		if ($search!=null) {
 			$search = "/search/".$search;	
 		}
-
-		$base_uri = $_SERVER['SCRIPT_NAME'];
-		$base_uri = explode("/", $base_uri);
-		array_pop($base_uri);
-		$base_uri = implode("/", $base_uri)."/";
-		$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
 		//$url 
-		$last= $protocol.$_SERVER['SERVER_NAME'].$base_uri.$uri.$search."?".$url[1].$this->page.$perpage;
+		$last= base_url_api().$uri.$search."?".$url[1].$this->page.$perpage;
 		return $last;
 
 	}
@@ -231,13 +220,9 @@ class My_pagination
 		if ($search!=null) {
 			$search = "/search/".$search;	
 		}
-		$base_uri = $_SERVER['SCRIPT_NAME'];
-		$base_uri = explode("/", $base_uri);
-		array_pop($base_uri);
-		$base_uri = implode("/", $base_uri)."/";
-		$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
+
 		//$url 
-		$last= $protocol.$_SERVER['SERVER_NAME'].$base_uri.$uri.$search."?".$url[1].$page.$perpage;
+		$last= base_url_api().$uri.$search."?".$url[1].$page.$perpage;
 
 		//}
 		return $last;
@@ -251,13 +236,9 @@ class My_pagination
 		if ($search!=null) {
 			$search = "/search/".$search;	
 		}
-		$base_uri = $_SERVER['SCRIPT_NAME'];
-		$base_uri = explode("/", $base_uri);
-		array_pop($base_uri);
-		$base_uri = implode("/", $base_uri)."/";
-		$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
+
 		//$url 
-		$last= $protocol.$_SERVER['SERVER_NAME'].$base_uri.$uri.$search."?".$url[1].$page.$perpage;
+		$last= base_url_api().$uri.$search."?".$url[1].$page.$perpage;
 
 		//}
 		return $last;
@@ -272,13 +253,8 @@ class My_pagination
 		if ($search!=null) {
 			$search = "/search/".$search;	
 		}
-		$base_uri = $_SERVER['SCRIPT_NAME'];
-		$base_uri = explode("/", $base_uri);
-		array_pop($base_uri);
-		$base_uri = implode("/", $base_uri)."/";
-		$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
 		//$url 
-		$last= $protocol.$_SERVER['SERVER_NAME'].$base_uri.$uri.$search."?".$url[1].$this->_count_row.$perpage;
+		$last= base_url_api().$uri.$search."?".$url[1].$this->_count_row.$perpage;
 
 		//}
 		return $last;

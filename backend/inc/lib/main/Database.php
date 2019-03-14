@@ -800,13 +800,21 @@ class Database
         }
     }
     
-    public function userCan($url, $role_act)
+    public function userCan($role_act)
     {
+        $array_act = array(
+            'read' => 'read_act',
+            'insert' => 'insert_act',
+            'update' => 'update_act',
+            'delete' => 'delete_act',
+            'import' => 'import_act'
+        );
+       
         $check_access = $this->fetchCustomSingle("select read_act,insert_act,update_act,delete_act,sys_menu.url from sys_menu inner join sys_menu_role on sys_menu.id=sys_menu_role.id_menu
-        where sys_menu_role.group_level=? and $role_act=? and url=?", array(
+        where sys_menu_role.group_level=? and $array_act[$role_act]=? and url=?", array(
             'group_level' => $_SESSION['group_level'],
-            "$role_act" => 'Y',
-            'url' => $url
+            "$array_act[$role_act]" => 'Y',
+            'url' => uri_segment(0)
         ));
         if ($check_access) {
             return true;
