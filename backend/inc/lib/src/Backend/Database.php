@@ -1,4 +1,6 @@
 <?php
+namespace Backend;
+use \PDO;
 /**
  * PDO mysql database helper class
  *

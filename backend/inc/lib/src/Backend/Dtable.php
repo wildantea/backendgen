@@ -1,4 +1,5 @@
 <?php
+namespace Backend;
 //error_reporting(0);
 /**
  * Script:    DataTables PDO server-side script for PHP and MySQL

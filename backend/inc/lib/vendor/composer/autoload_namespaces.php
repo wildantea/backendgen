@@ -13,5 +13,6 @@ return array(
     'Google_' => array($vendorDir . '/google/apiclient/src'),
     'Console' => array($vendorDir . '/pear/console_getopt'),
     'Bramus' => array($vendorDir . '/bramus/router/src'),
+    'Backend\\' => array($baseDir . '/src'),
     '' => array($vendorDir . '/pear/pear-core-minimal/src'),
 );

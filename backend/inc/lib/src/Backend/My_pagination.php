@@ -1,5 +1,5 @@
 <?php
- 
+namespace Backend;
 /**
  * easy and simple php pagination class
  *
@@ -49,7 +49,7 @@ class My_pagination
 
 		$this->con = $pdo;
 		
-		$this->url=basename($_SERVER['PHP_SELF'])."?page=";
+		$this->url=base_index().uri_segment(0)."?page=";
 		
            $this->param=array(
            	'range'=>10,
@@ -284,7 +284,7 @@ class My_pagination
 		}
 		return $res;
 	}
-
+ 
 
 	/**
 	 * method for creating previous link on page

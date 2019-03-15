@@ -24,15 +24,17 @@ define('DIR_API', 'api');
 $language  = "en";
 
 require_once("lang/$language.php");
-require_once('lib/main/Database.php');
-require_once('lib/main/Dtable.php');
-require_once('lib/main/My_pagination.php');
 require_once('helper/main.php');
 require_once "lib/vendor/autoload.php";
 
-$db=new Database($host, $port, $db_username, $db_password, $db_name);
-$pg=new My_pagination($db);
-$datatable=new Dtable($host, $port, $db_username, $db_password, $db_name);
+use \Backend\Database as DB;
+use \Backend\My_pagination as Pagination;
+use \Backend\Dtable as Datatable;
+
+$db=new DB($host, $port, $db_username, $db_password, $db_name);
+require_once "helper/url.php";
+$pg=new Pagination($db);
+$datatable=new Datatable($host, $port, $db_username, $db_password, $db_name);
 function handleException($exception)
 {
     echo  $exception->getMessage();
