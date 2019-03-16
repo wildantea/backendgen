@@ -32,7 +32,6 @@ use \Backend\My_pagination as Pagination;
 use \Backend\Dtable as Datatable;
 
 $db=new DB($host, $port, $db_username, $db_password, $db_name);
-require_once "helper/url.php";
 $pg=new Pagination($db);
 $datatable=new Datatable($host, $port, $db_username, $db_password, $db_name);
 function handleException($exception)

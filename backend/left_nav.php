@@ -33,36 +33,7 @@
                         </li>
 
 <?php
-// Select all entries from the menu table
-$result=$db->query("select sys_menu.*,sys_menu_role.read_act,sys_menu_role.insert_act,sys_menu_role.update_act,sys_menu_role.delete_act,sys_menu_role.group_level from sys_menu
-left join sys_menu_role on sys_menu.id=sys_menu_role.id_menu
-where sys_menu_role.group_level=? and sys_menu_role.read_act=? and tampil=? ORDER BY parent, urutan_menu",
-array(
-  'sys_menu_role.group_level'=>$_SESSION['group_level'],
-  'sys_menu_role.read_act'=>'Y',
-  'tampil'=>'Y'
-  )
-);
-
-
-// Create a multidimensional array to list items and parents
-$menu = array(
-    'items' => array(),
-    'parents' => array()
-);
-// Builds the array lists with data from the menu table
-foreach ($result as $items) {
-
-  $items = $db->converObjToArray($items);
-
-      // Creates entry into items array with current menu item id ie.
-    $menu['items'][$items['id']] = $items;
-    // Creates entry into parents array. Parents array contains a list of all items with children
-    $menu['parents'][$items['parent']][] = $items['id'];
-}
-/*echo "<pre>";
-print_r($menu);*/
-echo $db->buildMenu(uri_segment(0),0, $menu);
+echo $db->createMenu();
 ?>
 
            </ul>

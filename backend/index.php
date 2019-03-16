@@ -9,7 +9,7 @@ include  "header.php";
 //switch for static menu
 switch (uri_segment(0)) {
 	case 'filter':
-		include "system/page/filter/filter.php";
+		include "modul/page/filter/filter.php";
 		break;
 	case 'profil':
 		include "modul/profil/profil.php";
@@ -22,7 +22,7 @@ switch (uri_segment(0)) {
      //dynamic menu from database
 	//jika url yang di dipanggil ada di role user, include page
 	foreach ($db->fetchAll('sys_menu') as $isi) {
-		if (in_array($isi->url, $role_user)) {
+		if (in_array($isi->url, $db->roleUserMenu())) {
 			if (uri_segment(0)==$isi->url && uri_segment(0)!='') {
 				include "modul/".$isi->nav_act."/".$isi->nav_act.".php";
 			}

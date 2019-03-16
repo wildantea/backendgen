@@ -59,7 +59,7 @@ class Database
         }
         
     }
-
+    
     /**
      * begin a transaction.
      */
@@ -115,7 +115,7 @@ class Database
         $nilai = array(
             $val
         );
-        $sel = $this->pdo->prepare("SELECT * FROM $table WHERE $col=?");
+        $sel   = $this->pdo->prepare("SELECT * FROM $table WHERE $col=?");
         try {
             $sel->execute($nilai);
             $sel->setFetchMode(PDO::FETCH_OBJ);
@@ -200,22 +200,23 @@ class Database
         $sel->setFetchMode(PDO::FETCH_OBJ);
         $count = $sel->rowCount();
         if ($count > 0) {
-            $obj = $sel->fetch();
+            $obj              = $sel->fetch();
             $this->data_exist = $obj;
             return $this;
         } else {
             return false;
         }
     }
-
+    
     /**
      * return data from checkExist function
      * @return [type] [description]
      */
-    public function getData() {
+    public function getData()
+    {
         return $this->data_exist;
     }
-
+    
     /**
      * search data
      * @param  string $table table name
@@ -282,29 +283,30 @@ class Database
             return false;
         }
     }
-
+    
     /**
      * insert multiple row at once
      * @param  [type] $table      table name
      * @param  [type] $array_data multi array 
      * @return [type]             boolen 
      */
-    public function insertMulti($table_name,$values) {
+    public function insertMulti($table_name, $values)
+    {
         $column_name = array_keys($values[0]);
-        $column_name = implode(',',$column_name);
-    
+        $column_name = implode(',', $column_name);
+        
         $value_data = array();
         foreach ($values as $data => $val) {
-        
-        $value_data[] = '("'.implode('","',array_values($val)).'")';
+            
+            $value_data[] = '("' . implode('","', array_values($val)) . '")';
         }
-        $string_value = implode(",",$value_data);
-    
-        $sql = "INSERT INTO $table_name ($column_name) VALUES ".$string_value;
+        $string_value = implode(",", $value_data);
+        
+        $sql = "INSERT INTO $table_name ($column_name) VALUES " . $string_value;
         $this->query($sql);
     }
-
-
+    
+    
     public function getLastInsertId()
     {
         return $this->pdo->lastInsertId();
@@ -495,6 +497,38 @@ class Database
         }
         return $html;
     }
+
+    public function createMenu() 
+    {
+        // Select all entries from the menu table
+        $result=$this->query("select sys_menu.*,sys_menu_role.read_act,sys_menu_role.insert_act,sys_menu_role.update_act,sys_menu_role.delete_act,sys_menu_role.group_level from sys_menu
+        left join sys_menu_role on sys_menu.id=sys_menu_role.id_menu
+        where sys_menu_role.group_level=? and sys_menu_role.read_act=? and tampil=? ORDER BY parent, urutan_menu",
+        array(
+          'sys_menu_role.group_level'=>$_SESSION['group_level'],
+          'sys_menu_role.read_act'=>'Y',
+          'tampil'=>'Y'
+          )
+        );
+
+
+        // Create a multidimensional array to list items and parents
+        $menu = array(
+            'items' => array(),
+            'parents' => array()
+        );
+        // Builds the array lists with data from the menu table
+        foreach ($result as $items) {
+
+          $items = $this->converObjToArray($items);
+
+              // Creates entry into items array with current menu item id ie.
+            $menu['items'][$items['id']] = $items;
+            // Creates entry into parents array. Parents array contains a list of all items with children
+            $menu['parents'][$items['parent']][] = $items['id'];
+        }
+        return $this->buildMenu(uri_segment(0),0, $menu);
+    }
     
     //obj to array
     function converObjToArray($obj)
@@ -600,11 +634,6 @@ class Database
         imagejpeg($tmp, $filename, 100);
         imagedestroy($tmp);
         return $filename;
-    }
-    
-    public function __destruct()
-    {
-        $this->pdo = null;
     }
     
     function getDir($dir)
@@ -811,7 +840,7 @@ class Database
             'delete' => 'delete_act',
             'import' => 'import_act'
         );
-       
+        
         $check_access = $this->fetchCustomSingle("select read_act,insert_act,update_act,delete_act,sys_menu.url from sys_menu inner join sys_menu_role on sys_menu.id=sys_menu_role.id_menu
         where sys_menu_role.group_level=? and $array_act[$role_act]=? and url=?", array(
             'group_level' => $_SESSION['group_level'],
@@ -824,32 +853,19 @@ class Database
             return false;
         }
     }
-    
-    public function userCans($role_access)
-    {
-        
-        //simpan role url page user di array sesuai login session level
-        $access_url = array();
-        
-        $role_act = array();
-        foreach ($db->query("select sys_menu.url from sys_menu inner join sys_menu_role on sys_menu.id=sys_menu_role.id_menu
-    where sys_menu_role.group_level=? and sys_menu_role.read_act=?", array(
-            'sys_menu_role.group_level' => $_SESSION['group_level'],
-            'sys_menu_role.read_act' => 'Y'
-        )) as $role) {
-            $role_user[] = $role->url;
-        }
-        
-        //lebih detail detil crud role user
-        foreach ($db->query("select read_act,insert_act,update_act,delete_act from sys_menu inner join sys_menu_role on sys_menu.id=sys_menu_role.id_menu where sys_menu_role.group_level=? and sys_menu.url=?", array(
-            'sys_menu_role.group_level' => $_SESSION['group_level'],
-            'sys_menu.url' => uri_segment(1)
-        )) as $role) {
-            $role_act['up_act']     = $role->update_act;
-            $role_act['insert_act'] = $role->insert_act;
-            $role_act['del_act']    = $role->delete_act;
-        }
+    public function roleUserMenu(){
+      //simpan role url page user di array sesuai login session level
+      $role_user=array();
+      foreach ($this->query("select sys_menu.url from sys_menu inner join sys_menu_role on sys_menu.id=sys_menu_role.id_menu
+          where sys_menu_role.group_level=? and sys_menu_role.read_act=?",array('sys_menu_role.group_level'=>$_SESSION['group_level'],'sys_menu_role.read_act'=>'Y')) as $role) {
+        $role_user[]=$role->url;
+      }
+      return $role_user;
     }
-    
+
+    public function __destruct()
+    {
+        $this->pdo = null;
+    }
 }
 ?>
