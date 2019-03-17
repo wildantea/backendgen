@@ -184,7 +184,7 @@ switch ($_GET['act']) {
 
 		$data = array(
 			'page_name'=>$_POST['page_name'],
-			'parent_name' => $parent_name,
+			'parent' => $parent_name,
 			'icon'=>$_POST['icon'],
 			'parent'=>$_POST['parent']
 			);
