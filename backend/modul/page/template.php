@@ -211,6 +211,7 @@ $list_table ='<!-- Content Header (Page header) -->
       '.$js_modal_edit.'
       var dtb_'.$modul_name.' = $("#dtb_'.$modul_name.'").DataTable({
               '.$standard_button."
+           $ordering_default_column
            'bProcessing': true,
             'bServerSide': true,
             ".$column_def."
@@ -223,121 +224,7 @@ $list_table ='<!-- Content Header (Page header) -->
             }
           },
         });
-
-$('.bulk-check').on('click',function() { // bulk checked
-      var status = this.checked;
-      if (status) {
-        select_deselect('select');
-      } else {
-        select_deselect('unselect');
-      }
-      $('.check-selected').each( function() {
-        $(this).prop('checked',status);
-      });
-      check_selected();
-});
-
-
-
-  $(document).on('click', '#dtb_".$modul_name." tbody tr .check-selected', function(event) {
-      var btn = $(this).find('button');
-      if (btn.length == 0) {
-          $(this).parents('tr').toggleClass('DTTT_selected selected');
-          check_selected();
-      }
-  });
-
-  function check_selected() {
-      var table_select = $('#dtb_".$modul_name." tbody tr.selected');
-      var array_data_delete = [];
-      table_select.each(function() {
-          var check_data = $(this).find('.hapus_dtb_notif').attr('data-id');
-          if (typeof check_data != 'undefined') {
-              array_data_delete.push(check_data)
-          }
-      });
-      if (array_data_delete.length>0) {
-        $('.selected-data').text(array_data_delete.length + ' ".'<?=$lang["selected_data"];?>'."');
-        $('#bulk_delete').show();
-      } else {
-        $('.selected-data').text('');
-        $('.bulk-check').prop('checked',false);
-        $('#bulk_delete').hide();
-      }
-      return array_data_delete
-  }
-
-
-  function select_deselect(type) {
-      if (type == 'select') {
-          $('#dtb_".$modul_name." tbody tr').addClass('DTTT_selected selected')
-      } else {
-          $('#dtb_".$modul_name." tbody tr').removeClass('DTTT_selected selected')
-      }
-  }
-
-
-
-
-/* Add a click handler for the delete row */
-  $('#bulk_delete').click( function() {
-    var anSelected = fnGetSelected( dtb_$modul_name );
-    var data_array_id = check_selected();
-    var all_ids = data_array_id.toString();
-    $('#modal-confirm-delete').modal({ keyboard: false }).one('click', '#delete', function (e) {
-        $('#loadnya').show();
-        $.ajax({
-            type: 'POST',
-            dataType: 'json',
-            error: function(data ) { 
-                $('#loadnya').hide();
-                console.log(data); 
-               $('.isi_warning_delete').html(data.responseText);
-               $('.error_data_delete').fadeIn();
-               $('html, body').animate({
-                  scrollTop: ($('.error_data_delete').first().offset().top)
-              },500);
-            },
-            url: '<?=base_admin();?>modul/".strtolower(str_replace(" ", "_", $_POST['page_name']))."/".strtolower(str_replace(" ", "_", $_POST['page_name']))."_action.php?act=del_massal',
-            data: {data_ids:all_ids},
-               success: function(responseText) {
-                  $('#loadnya').hide();
-                  console.log(responseText);
-                      $.each(responseText, function(index) {
-                          console.log(responseText[index].status);
-                          if (responseText[index].status=='die') {
-                            $('#informasi').modal('show');
-                          } else if(responseText[index].status=='error') {
-                             $('.isi_warning_delete').text(responseText[index].error_message);
-                             $('.error_data_delete').fadeIn();
-                             $('html, body').animate({
-                                scrollTop: ($('.error_data_delete').first().offset().top)
-                            },500);
-                          } else if(responseText[index].status=='good') {
-                            $('.error_data_delete').hide();
-                               $('.selected-data').text('');
-                               $('.bulk-check').prop('checked',false);
-                               $('#bulk_delete').hide();
-                               $('#loadnya').hide();
-                               $(anSelected).remove();
-                               dtb_$modul_name.draw();
-                          }
-                    });
-                }
-            //async:false
-        });
-
-        $('#modal-confirm-delete').modal('hide');
-
-    });
-
-  });
-
-  /* Get the rows which are currently selected */
-  function fnGetSelected( oTableLocal )
-  {
-      return oTableLocal.$('tr.selected');
-  }
+".$bulk_delete_script."
 </script>
             ";
 $list_table_off ='<!-- Content Header (Page header) -->

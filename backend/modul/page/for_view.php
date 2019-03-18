@@ -108,6 +108,12 @@ if ($col->Key=='PRI') {
                           <input name="create_number" class="make-switch" data-on-text="Yes" data-off-text="No" type="checkbox" data-on-color="info" data-off-color="danger" checked="">
                     </div>
                    </div>
+<div class="form-group">
+                 <label class="control-label col-lg-2" style="text-align: left">Bulk Delete Option</label>
+                 <div class="col-lg-4">
+                          <input name="bulk_delete" class="make-switch" data-on-text="Yes" data-off-text="No" type="checkbox" data-on-color="info" data-off-color="danger" checked="">
+                    </div>
+                   </div>
               </div><!-- /.col-lg-6 -->
 <script type="text/javascript">
                       $.each($('.make-switch'), function () {

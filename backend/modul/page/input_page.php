@@ -3,7 +3,11 @@ include "../../inc/config.php";
 echo "<pre>";
 print_r($_POST);
 
-
+$i_init = '';
+$i_increment = '';
+$col_zero_target = '';
+$ordering_default_column = "";
+$loop_number = "";
 if(isset($_POST["tampil"])=="on")
     {
       $tampil = "Y";
@@ -2471,28 +2475,182 @@ $group_by = '$datatable->setGroupBy("'.$main_table.'.'.$primary_key.'");';
   $dropdown_button = "";
   $create_order =  "'targets': [$total_column],";
   $create_number = "";
+
+$bulk_delete_js = "
+
+$('.bulk-check').on('click',function() { // bulk checked
+      var status = this.checked;
+      if (status) {
+        select_deselect('select');
+      } else {
+        select_deselect('unselect');
+      }
+      $('.check-selected').each( function() {
+        $(this).prop('checked',status);
+      });
+      check_selected();
+});
+
+
+
+  $(document).on('click', '#dtb_".$modul_name." tbody tr .check-selected', function(event) {
+      var btn = $(this).find('button');
+      if (btn.length == 0) {
+          $(this).parents('tr').toggleClass('DTTT_selected selected');
+          check_selected();
+      }
+  });
+
+  function check_selected() {
+      var table_select = $('#dtb_".$modul_name." tbody tr.selected');
+      var array_data_delete = [];
+      table_select.each(function() {
+          var check_data = $(this).find('.hapus_dtb_notif').attr('data-id');
+          if (typeof check_data != 'undefined') {
+              array_data_delete.push(check_data)
+          }
+      });
+      if (array_data_delete.length>0) {
+        $('.selected-data').text(array_data_delete.length + ' ".'<?=$lang["selected_data"];?>'."');
+        $('#bulk_delete').show();
+      } else {
+        $('.selected-data').text('');
+        $('.bulk-check').prop('checked',false);
+        $('#bulk_delete').hide();
+      }
+      return array_data_delete
+  }
+
+
+  function select_deselect(type) {
+      if (type == 'select') {
+          $('#dtb_".$modul_name." tbody tr').addClass('DTTT_selected selected')
+      } else {
+          $('#dtb_".$modul_name." tbody tr').removeClass('DTTT_selected selected')
+      }
+  }
+
+
+
+
+/* Add a click handler for the delete row */
+  $('#bulk_delete').click( function() {
+    var anSelected = fnGetSelected( dtb_$modul_name );
+    var data_array_id = check_selected();
+    var all_ids = data_array_id.toString();
+    $('#modal-confirm-delete').modal({ keyboard: false }).one('click', '#delete', function (e) {
+        $('#loadnya').show();
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            error: function(data ) { 
+                $('#loadnya').hide();
+                console.log(data); 
+               $('.isi_warning_delete').html(data.responseText);
+               $('.error_data_delete').fadeIn();
+               $('html, body').animate({
+                  scrollTop: ($('.error_data_delete').first().offset().top)
+              },500);
+            },
+            url: '<?=base_admin();?>modul/".strtolower(str_replace(" ", "_", $_POST['page_name']))."/".strtolower(str_replace(" ", "_", $_POST['page_name']))."_action.php?act=del_massal',
+            data: {data_ids:all_ids},
+               success: function(responseText) {
+                  $('#loadnya').hide();
+                  console.log(responseText);
+                      $.each(responseText, function(index) {
+                          console.log(responseText[index].status);
+                          if (responseText[index].status=='die') {
+                            $('#informasi').modal('show');
+                          } else if(responseText[index].status=='error') {
+                             $('.isi_warning_delete').text(responseText[index].error_message);
+                             $('.error_data_delete').fadeIn();
+                             $('html, body').animate({
+                                scrollTop: ($('.error_data_delete').first().offset().top)
+                            },500);
+                          } else if(responseText[index].status=='good') {
+                            $('.error_data_delete').hide();
+                               $('.selected-data').text('');
+                               $('.bulk-check').prop('checked',false);
+                               $('#bulk_delete').hide();
+                               $('#loadnya').hide();
+                               $(anSelected).remove();
+                               dtb_$modul_name.draw();
+                          }
+                    });
+                }
+            //async:false
+        });
+
+        $('#modal-confirm-delete').modal('hide');
+
+    });
+
+  });
+
+  /* Get the rows which are currently selected */
+  function fnGetSelected( oTableLocal )
+  {
+      return oTableLocal.$('tr.selected');
+  }
+  ";
+
   if ($_POST['create_number']=='on') {
-     $total_column = $total_column+1;
-     $set_numbering = '
+    $total_column = $total_column+1;
+    $i_init = '$i=1;';
+    $i_increment = '$i++;';
+    $ordering_default_column = "'order' : [[1,'asc']],";
+    $col_zero_target = '{
+             "targets": [0],
+             "width" : "5%",
+              "orderable": false,
+              "searchable": false,
+              "class" : "dt-center"
+            }
+    ';
+        $set_numbering = '
   //set numbering is true
   $datatable->setNumberingStatus(1);';
-    $head_no = "<th style='padding-right:0;'><label class='mt-checkbox mt-checkbox-single mt-checkbox-outline '> <input type='checkbox' class='group-checkable bulk-check'> <span></span></label>#</th>";
-    $i_init = '$i=1;';
-    $i_increment = '$i++;';
+    if ($_POST['bulk_delete']=='on') {
+    $head_no = "<th style='padding-right:13px;' class='dt-center'><label class='mt-checkbox mt-checkbox-single mt-checkbox-outline '> <input type='checkbox' class='group-checkable bulk-check'> <span></span></label></th>";
 
     $create_number = '$ResultData[] = \'<label class="mt-checkbox mt-checkbox-single mt-checkbox-outline"> <input type="checkbox" class="group-checkable check-selected"> <span></span></label>\'.$datatable->number($i);';
-  } else {
-    $total_column = $total_column+1;
-    $set_numbering = '
-    //set numbering is true
-    $datatable->setNumberingStatus(1);';
-    $head_no = "<th style='padding-right:0;'><label class='mt-checkbox mt-checkbox-single mt-checkbox-outline '> <input type='checkbox' class='group-checkable bulk-check'> <span></span></label></th>";
-    $i_init = '$i=1;';
-    $i_increment = '$i++;';
+    $bulk_delete_script = $bulk_delete_js;
+    } else {
+        $head_no = "<th style='padding-right:0;' class='dt-center'>#</th>";
+        $create_number = '$ResultData[] = $datatable->number($i);';
+        $bulk_delete_script = "";
+    }
 
-    $create_number = '$ResultData[] = \'<label class="mt-checkbox mt-checkbox-single mt-checkbox-outline"> <input type="checkbox" class="group-checkable check-selected"> <span></span></label>\';';
+  } else {
+
+    if ($_POST['bulk_delete']=='on') {
+        $total_column = $total_column+1;
+        $set_numbering = '
+        //set numbering is true
+        $datatable->setNumberingStatus(1);';
+
+    $head_no = "<th style='padding-right:6px;' class='dt-center'><label class='mt-checkbox mt-checkbox-single mt-checkbox-outline '> <input type='checkbox' class='group-checkable bulk-check'> <span></span></label></th>";
+          $create_number = '$ResultData[] = \'<label class="mt-checkbox mt-checkbox-single mt-checkbox-outline"> <input type="checkbox" class="group-checkable check-selected"> <span></span></label>\';';
+    $ordering_default_column = "'order' : [[1,'asc']],";
+    $col_zero_target = '{
+             "targets": [0],
+             "width" : "5%",
+              "orderable": false,
+              "searchable": false,
+              "class" : "dt-center"
+            }
+    ';
+        $bulk_delete_script = $bulk_delete_js;
+    } else {
+        $set_numbering = '
+        //set numbering is true
+        $datatable->setNumberingStatus(0);';
+        $head_no = "";
+        $create_number = '';
+        $bulk_delete_script = "";
+    }
   }
-   
+
 
     if ($_POST['button_action']=='standard') {
       $edit_button_view = '$edit = "<a data-id=\'+data+\' '.$button_edit_modal.' class=\"btn btn-primary btn-sm edit_data \" data-toggle=\"tooltip\" title=\"Edit\"><i class=\"fa fa-pencil\"></i></a>";
@@ -2524,12 +2682,8 @@ $group_by = '$datatable->setGroupBy("'.$main_table.'.'.$primary_key.'");';
          //disable order dan searching pada tombol aksi use "className":"none" for always responsive hide column
                  "columnDefs": [ 
               '.$dropdown_button.'
-            {
-             "targets": [0],
-             "width" : "5%",
-              "orderable": false,
-              "searchable": false
-            } ],
+              '.$col_zero_target.'
+             ],
       ';
   } else {
      $edit_button_view = '$edit = "<a data-id=\'+data+\' '.$button_edit_modal.' class=\"edit_data \" data-toggle=\"tooltip\" title=\"".$lang["edit"]."\"><i class=\"fa fa-pencil\"></i> ".$lang["edit"]."</a>";
@@ -2552,12 +2706,8 @@ $group_by = '$datatable->setGroupBy("'.$main_table.'.'.$primary_key.'");';
          //disable order dan searching pada tombol aksi use "className":"none" for always responsive hide column
                  "columnDefs": [ 
               '.$dropdown_button.'
-            {
-             "targets": [0],
-              "width" : "5%",
-              "orderable": false,
-              "searchable": false
-            } ],
+              '.$col_zero_target.' 
+              ],
       ';
 
   }
@@ -2568,7 +2718,7 @@ $group_by = '$datatable->setGroupBy("'.$main_table.'.'.$primary_key.'");';
   }
 }
  elseif ($_POST['method_table']=='dtb_manual') {
-
+  $loop_number = "";
   if ($_POST['create_number']=='on') {
         $i_init = '$i=1;';
         $i_increment = '$i++;';
@@ -2621,7 +2771,7 @@ $group_by = '$datatable->setGroupBy("'.$main_table.'.'.$primary_key.'");';
       $i=1;
       foreach ($dtb as $isi) {
         ?><tr id="line_<?=$isi->'.$primary_key_only_col.';?>">
-          <td align="center"><?=$i;?></td>'.$col.'
+           '.$loop_number.$col.'
         <td>
             <?php
             echo \'<a href="\'.base_index().\''.strtolower(str_replace(" ", "-", $_POST['page_name'])).'/detail/\'.$isi->'.$primary_key_only_col.'.\'" class="btn btn-success btn-sm"><i class="fa fa-eye"></i></a> \';
