@@ -503,7 +503,7 @@ class Database
         // Select all entries from the menu table
         $result=$this->query("select sys_menu.*,sys_menu_role.read_act,sys_menu_role.insert_act,sys_menu_role.update_act,sys_menu_role.delete_act,sys_menu_role.group_level from sys_menu
         left join sys_menu_role on sys_menu.id=sys_menu_role.id_menu
-        where sys_menu_role.group_level=? and sys_menu_role.read_act=? and tampil=? ORDER BY parent, urutan_menu",
+        where sys_menu_role.group_level=? and sys_menu_role.read_act=? and tampil=? ORDER BY parent, urutan_menu asc",
         array(
           'sys_menu_role.group_level'=>$_SESSION['group_level'],
           'sys_menu_role.read_act'=>'Y',

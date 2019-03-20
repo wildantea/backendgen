@@ -1185,11 +1185,9 @@ $checkbox_edit= '
     $if_boolean.= '
           if(isset($_POST["'.$key.'"])=="on")
           {
-            $'.$key.' = array("'.$key.'"=>"'.$isi_yes.'");
-            $data=array_merge($data,$'.$key.');
+            $data["'.$key.'"] = "'.$isi_yes.'";
           } else {
-            $'.$key.' = array("'.$key.'"=>"'.$isi_no.'");
-            $data=array_merge($data,$'.$key.');
+            $data["'.$key.'"] = "'.$isi_no.'";
           }';
 
     $update = '
@@ -1757,8 +1755,7 @@ $checkbox_edit= '
 
             } else {
               move_uploaded_file($_FILES["'.$key.'"]["tmp_name"], "../../../upload/'.$modul_name.'/".$_FILES[\''.$key.'\'][\'name\']);
-              $'.$key.' = array("'.$key.'"=>$_FILES["'.$key.'"]["name"]);
-              $data = array_merge($data,$'.$key.');
+              $data["'.$key.'"] = $_FILES["'.$key.'"]["name"];
             }';
                          $for_file .= '
                          if(isset($_FILES["'.$key.'"]["name"])) {
@@ -1769,8 +1766,7 @@ $checkbox_edit= '
             } else {
               move_uploaded_file($_FILES["'.$key.'"]["tmp_name"], "../../../upload/'.$modul_name.'/".$_FILES[\''.$key.'\'][\'name\']);
               $db->deleteDirectory("../../../upload/'.$modul_name.'/".$db->fetchSingleRow("'.$main_table.'","'.$primary_key.'",$_POST["id"])->'.$key.');
-              $'.$key.' = array("'.$key.'"=>$_FILES["'.$key.'"]["name"]);
-              $data = array_merge($data,$'.$key.');
+              $data["'.$key.'"] = $_FILES["'.$key.'"]["name"];
             }
 
                          }';
@@ -1831,8 +1827,7 @@ $for_file_delete = '$db->deleteDirectory("../../../upload/'.$modul_name.'/".$db-
 
             } else {
 $db->compressImage($_FILES["'.$key.'"]["type"],$_FILES["'.$key.'"]["tmp_name"],"../../../upload/'.$modul_name.'/",$_FILES["'.$key.'"]["name"],'.$height_crop.','.$width_crop.');
-            $'.$key.' = array("'.$key.'"=>$_FILES["'.$key.'"]["name"]);
-              $data = array_merge($data,$'.$key.');
+              $data["'.$key.'"] = $_FILES["'.$key.'"]["name"];
             }';
 
    $for_uimager .= '
@@ -1845,8 +1840,7 @@ $db->compressImage($_FILES["'.$key.'"]["type"],$_FILES["'.$key.'"]["tmp_name"],"
             } else {
 $db->compressImage($_FILES["'.$key.'"]["type"],$_FILES["'.$key.'"]["tmp_name"],"../../../upload/'.$modul_name.'/",$_FILES["'.$key.'"]["name"],'.$height_crop.','.$width_crop.');
               $db->deleteDirectory("../../../upload/'.$modul_name.'/".$db->fetchSingleRow("'.$main_table.'","'.$primary_key.'",$_POST["id"])->'.$key.');
-              $'.$key.' = array("'.$key.'"=>$_FILES["'.$key.'"]["name"]);
-              $data = array_merge($data,$'.$key.');
+              $data["'.$key.'"] = $_FILES["'.$key.'"]["name"];
             }
 
                          }';
@@ -1911,9 +1905,7 @@ $update = '<div class="form-group">
 
             } else {
       move_uploaded_file($_FILES["'.$key.'"]["tmp_name"], "../../../upload/'.$modul_name.'/".$_FILES[\''.$key.'\'][\'name\']);
-
-            $'.$key.' = array("'.$key.'"=>$_FILES["'.$key.'"]["name"]);
-              $data = array_merge($data,$'.$key.');
+              $data["'.$key.'"] = $_FILES["'.$key.'"]["name"];
             }';
 
    $for_uimagef .= '
@@ -1926,8 +1918,7 @@ $update = '<div class="form-group">
       move_uploaded_file($_FILES["'.$key.'"]["tmp_name"], "../../../upload/'.$modul_name.'/".$_FILES[\''.$key.'\'][\'name\']);
 
               $db->deleteDirectory("../../../upload/'.$modul_name.'/".$db->fetchSingleRow("'.$main_table.'","'.$primary_key.'",$_POST["id"])->'.$key.');
-              $'.$key.' = array("'.$key.'"=>$_FILES["'.$key.'"]["name"]);
-              $data = array_merge($data,$'.$key.');
+              $data["'.$key.'"] = $_FILES["'.$key.'"]["name"];
             }
 
                          }';
