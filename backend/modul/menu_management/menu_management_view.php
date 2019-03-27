@@ -27,9 +27,7 @@
                         <option value="">Choose Group User</option>
                           <?php 
 
-foreach ($db->query("select sys_group_users.id, sys_group_users.level_name from sys_users inner join sys_group_users 
-on sys_users.group_level=sys_group_users.level
-group by sys_group_users.id") as $isi) {
+foreach ($db->query("select sys_group_users.id, sys_group_users.level_name from sys_group_users ") as $isi) {
 
                   if (intval($_GET['user'])==$isi->id) {
                      echo "<option value='$isi->id' selected>$isi->level_name</option>";
@@ -61,7 +59,7 @@ group by sys_group_users.id") as $isi) {
                         <tr>
                         <th style="width:20px">No</th>
                           <th>Menu </th>
-                          <th>Group User</th>
+                       
                           <th>View</th>
                            <th>Add</th>
                             <th>Edit</th>
@@ -72,15 +70,24 @@ group by sys_group_users.id") as $isi) {
                       </thead>
                       <tbody>
                         <?php 
-      $dtb=$db->query("select import_act,sys_menu.type_menu,sys_menu_role.read_act,sys_menu_role.insert_act,sys_menu_role.update_act,sys_menu_role.delete_act, sys_menu.page_name,sys_menu.urutan_menu,sys_group_users.level_name,sys_menu_role.id from sys_menu_role inner join sys_menu on sys_menu_role.id_menu=sys_menu.id inner join sys_group_users on sys_menu_role.group_level=sys_group_users.level where sys_group_users.id=? order by type_menu,urutan_menu asc",array('sys_group_users.id'=>$_GET
-        ['user']));
+$group_level = $db->fetchSingleRow("sys_group_users","id",$_GET['user']);
+if ($group_level) {
+
+$level = $group_level->level;
+      $dtb=$db->query("SELECT sys_menu.id,sys_menu.page_name,type_menu,
+(select sys_menu_role.read_act from sys_menu_role where sys_menu_role.id_menu=sys_menu.id and sys_menu_role.group_level='$level') as read_act,
+(select sys_menu_role.insert_act from sys_menu_role where sys_menu_role.id_menu=sys_menu.id and sys_menu_role.group_level='$level') as insert_act,
+(select sys_menu_role.update_act from sys_menu_role where sys_menu_role.id_menu=sys_menu.id and sys_menu_role.group_level='$level') as update_act,
+(select sys_menu_role.delete_act from sys_menu_role where sys_menu_role.id_menu=sys_menu.id and sys_menu_role.group_level='$level') as delete_act,
+(select sys_menu_role.import_act from sys_menu_role where sys_menu_role.id_menu=sys_menu.id and sys_menu_role.group_level='$level') as import_act 
+FROM sys_menu order by parent,urutan_menu asc");
       $i=1;
       foreach ($dtb as $isi) {
         ?><tr id="line_<?=$isi->id;?>">
         <td>
         <?=$i;?></td>
         <td><?=$isi->page_name;?></td>
-        <td><?=$isi->level_name;?></td>
+       
         <?php
         if($isi->type_menu=='main')
         {
@@ -88,7 +95,7 @@ group by sys_group_users.id") as $isi) {
             <td>
               <div class="checkbox">
               <div class="checkbox checkbox-primary">
-                        <input class="styled styled-primary" type="checkbox" value="option1" onclick="read_act(<?=$isi->id;?>,this)" <?=($isi->read_act=='Y')?'checked=""':'';?>>
+                        <input class="styled styled-primary" type="checkbox" value="option1" onclick="update_role(<?=$isi->id;?>,this,'read_act')" <?=($isi->read_act=='Y')?'checked=""':'';?>>
                         <label for="checkbox2">
                             &nbsp;
                         </label>
@@ -102,7 +109,7 @@ group by sys_group_users.id") as $isi) {
           <td>
               <div class="checkbox">
               <div class="checkbox checkbox-primary">
-                        <input class="styled styled-primary" type="checkbox" value="option1" onclick="read_act(<?=$isi->id;?>,this)" <?=($isi->read_act=='Y')?'checked=""':'';?>>
+                        <input class="styled styled-primary" type="checkbox" value="option1" onclick="update_role(<?=$isi->id;?>,this,'read_act')" <?=($isi->read_act=='Y')?'checked=""':'';?>>
                         <label for="checkbox2">
                             &nbsp;
                         </label>
@@ -119,7 +126,7 @@ group by sys_group_users.id") as $isi) {
         <td>
         <div class="checkbox">
           <div class="checkbox checkbox-primary">
-                        <input class="styled styled-primary" type="checkbox" value="option1" onclick="read_act(<?=$isi->id;?>,this)" <?=($isi->read_act=='Y')?'checked=""':'';?>>
+                        <input class="styled styled-primary" type="checkbox" value="option1" onclick="update_role(<?=$isi->id;?>,this,'read_act')" <?=($isi->read_act=='Y')?'checked=""':'';?>>
                         <label for="checkbox2">
                             &nbsp;
                         </label>
@@ -129,7 +136,7 @@ group by sys_group_users.id") as $isi) {
           <td>
           <div class="checkbox">
            <div class="checkbox checkbox-primary">
-                        <input class="styled styled-primary" type="checkbox" value="option1" onclick="insert_act(<?=$isi->id;?>,this)" <?=($isi->insert_act=='Y')?'checked=""':'';?>>
+                        <input class="styled styled-primary" type="checkbox" value="option1" onclick="update_role(<?=$isi->id;?>,this,'insert_act')" <?=($isi->insert_act=='Y')?'checked=""':'';?>>
                         <label for="checkbox2">
                             &nbsp;
                         </label>
@@ -138,7 +145,7 @@ group by sys_group_users.id") as $isi) {
       </td>
             <td>   <div class="checkbox">
             <div class="checkbox checkbox-primary">
-                          <input class="styled styled-primary" type="checkbox" value="option1" onclick="update_act(<?=$isi->id;?>,this)" <?=($isi->update_act=='Y')?'checked=""':'';?>>
+                          <input class="styled styled-primary" type="checkbox" value="option1" onclick="update_role(<?=$isi->id;?>,this,'update_act')" <?=($isi->update_act=='Y')?'checked=""':'';?>>
                         <label for="checkbox2">
                             &nbsp;
                         </label>
@@ -146,7 +153,7 @@ group by sys_group_users.id") as $isi) {
                           </div></td>
               <td>   <div class="checkbox">
               <div class="checkbox checkbox-primary">
-                         <input class="styled styled-primary" type="checkbox" value="option1" onclick="delete_act(<?=$isi->id;?>,this)" <?=($isi->delete_act=='Y')?'checked=""':'';?>>
+                         <input class="styled styled-primary" type="checkbox" value="option1" onclick="update_role(<?=$isi->id;?>,this,'delete_act')" <?=($isi->delete_act=='Y')?'checked=""':'';?>>
                         <label for="checkbox2">
                             &nbsp;
                         </label>
@@ -154,7 +161,7 @@ group by sys_group_users.id") as $isi) {
                           </div></td>
               <td>   <div class="checkbox">
               <div class="checkbox checkbox-primary">
-                         <input class="styled styled-primary" type="checkbox" value="option1" onclick="import_act(<?=$isi->id;?>,this)" <?=($isi->import_act=='Y')?'checked=""':'';?>>
+                         <input class="styled styled-primary" type="checkbox" value="option1" onclick="update_role(<?=$isi->id;?>,this,'import_act')" <?=($isi->import_act=='Y')?'checked=""':'';?>>
                         <label for="checkbox2">
                             &nbsp;
                         </label>
@@ -186,111 +193,24 @@ group by sys_group_users.id") as $isi) {
 
 
 <script type="text/javascript">
-  
-function read_act(id,cb) {
+function update_role(id,cb,act) {
   check_act = '';
   if (cb.checked) {
      check_act = 'Y';
   } else {
     check_act = 'N';
-
   }
   $.ajax({
 
         type: "post",
-        url: "<?=base_admin();?>modul/menu_management/menu_management_action.php?act=change_read",
-        data: "role_id="+id+"&data_act="+check_act,
-     //  enctype:  'multipart/form-data'
+        url: "<?=base_admin();?>modul/menu_management/menu_management_action.php",
+        data : {
+          id_menu : id,
+          data_act : check_act,
+          level : "<?=$level;?>",
+          action : act
+        },
       success: function(data){
-
-        console.log(data);
-    }
-
-  });
-}
-
-function insert_act(id,cb) {
-  check_act = '';
-  if (cb.checked) {
-     check_act = 'Y';
-  } else {
-    check_act = 'N';
-
-  }
-  $.ajax({
-
-        type: "post",
-        url: "<?=base_admin();?>modul/menu_management/menu_management_action.php?act=change_insert",
-        data: "role_id="+id+"&data_act="+check_act,
-     //  enctype:  'multipart/form-data'
-      success: function(data){
-
-        console.log(data);
-    }
-
-  });
-}
-
-function update_act(id,cb) {
-  check_act = '';
-  if (cb.checked) {
-     check_act = 'Y';
-  } else {
-    check_act = 'N';
-
-  }
-  $.ajax({
-
-        type: "post",
-        url: "<?=base_admin();?>modul/menu_management/menu_management_action.php?act=change_update",
-        data: "role_id="+id+"&data_act="+check_act,
-     //  enctype:  'multipart/form-data'
-      success: function(data){
-
-        console.log(data);
-    }
-
-  });
-}
-
-function delete_act(id,cb) {
-  check_act = '';
-  if (cb.checked) {
-     check_act = 'Y';
-  } else {
-    check_act = 'N';
-
-  }
-  $.ajax({
-
-        type: "post",
-        url: "<?=base_admin();?>modul/menu_management/menu_management_action.php?act=change_delete",
-        data: "role_id="+id+"&data_act="+check_act,
-     //  enctype:  'multipart/form-data'
-      success: function(data){
-
-        console.log(data);
-    }
-
-  });
-}
-
-function import_act(id,cb) {
-  check_act = '';
-  if (cb.checked) {
-     check_act = 'Y';
-  } else {
-    check_act = 'N';
-
-  }
-  $.ajax({
-
-        type: "post",
-        url: "<?=base_admin();?>modul/menu_management/menu_management_action.php?act=change_import",
-        data: "role_id="+id+"&data_act="+check_act,
-     //  enctype:  'multipart/form-data'
-      success: function(data){
-
         console.log(data);
     }
 
@@ -299,6 +219,7 @@ function import_act(id,cb) {
 
   </script>
 
-
-
-
+<?php
+  
+}
+?>

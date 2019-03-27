@@ -2,33 +2,35 @@
 session_start();
 include "../../inc/config.php";
 session_check_adm();
-switch ($_GET["act"]) {
-	
-	case 'change_read':
-		$db->update('sys_menu_role',array('read_act'=>$_POST['data_act']),'id',$_POST['role_id']);
-		break;
 
-	case 'change_insert':
-		$db->update('sys_menu_role',array('insert_act'=>$_POST['data_act']),'id',$_POST['role_id']);
-		break;
-
-	case 'change_update':
-		$db->update('sys_menu_role',array('update_act'=>$_POST['data_act']),'id',$_POST['role_id']);
-		break;
-
-	case 'change_delete':
-		$db->update('sys_menu_role',array('delete_act'=>$_POST['data_act']),'id',$_POST['role_id']);
-		break;
-	case 'change_import':
-		$db->update('sys_menu_role',array('import_act'=>$_POST['data_act']),'id',$_POST['role_id']);
-		break;
-	case "delete":
-		$db->delete("sys_menu_role","id",$_GET["id"]);
-		break;
+		//check exist
+		$action = $_POST['action'];
+		$array_exist = array(
+				"id_menu" => $_POST['id_menu'],
+				"group_level" => $_POST['level']
+				);
 		
-	default:
-		# code...
-		break;
-}
+		$check = $db->checkExist("sys_menu_role",$array_exist);
+		if ($check)
+		{
+			$db->query("update sys_menu_role set $action=? where id_menu=? and group_level=?",
+				array(
+					"$action" => $_POST['data_act'],
+					'id_menu' => $_POST['id_menu'],
+					'group_level' => $_POST['level']
+				));
+		} else {
+			$array_act = array(
+				'read_act' => 'N',
+				'insert_act' => 'N',
+				'update_act' => 'N',
+				'delete_act' => 'N',
+				'import_act' => 'N',
+				'id_menu' => $_POST['id_menu'],
+				'group_level' => $_POST['level']
+			);
+			$array_act[$action] = $_POST['data_act'];
+			$db->insert("sys_menu_role",$array_act);
+		}
 
 ?>

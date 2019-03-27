@@ -203,6 +203,19 @@ function tgl_time($date) { // fungsi atau method untuk mengubah tanggal ke forma
 
 }
 
+/**
+ * [trimmer trim for import excel
+ *
+ * @param  [type] $excel column value
+ * @return [type]  trimmed value
+ */
+function trimmer($value)
+{
+    $result = preg_replace('/[^[:print:]]/', '', filter_var($value, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW|FILTER_FLAG_STRIP_HIGH));
+    return addslashes(trim($result));
+}
+
+
 /*function diff_array($array_first,$array_second) {
   if (count($array_first)>count($array_second)) {
   //delete 
