@@ -792,7 +792,7 @@ class Database
         array_pop($modul_dir);
         
         $modul_dir = implode(DIRECTORY_SEPARATOR, $modul_dir);
-        return $modul_dir . DIRECTORY_SEPARATOR . "system" . DIRECTORY_SEPARATOR . "excel" . DIRECTORY_SEPARATOR . 'result' . DIRECTORY_SEPARATOR;
+        return $modul_dir . DIRECTORY_SEPARATOR . "modul" . DIRECTORY_SEPARATOR . "excel" . DIRECTORY_SEPARATOR . 'result' . DIRECTORY_SEPARATOR;
     }
     
     function downloadfolderExcel($fd, $str_data, $put_into)
